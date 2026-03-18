@@ -53,17 +53,11 @@
     <div class="flex h-screen overflow-hidden relative">
         <!-- Sidebar -->
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-primary text-white flex flex-col shrink-0 shadow-xl sidebar-hidden lg:relative lg:translate-x-0 transition-transform duration-300">
-            <div class="p-6 flex items-center justify-between lg:justify-start gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
-                        <span class="material-symbols-outlined text-primary font-bold">verified_user</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-sm font-bold leading-tight uppercase tracking-wider">Gestión de</span>
-                        <span class="text-xs font-light text-accent">Plataforma</span>
-                    </div>
+            <div class="p-6 flex items-center justify-between lg:justify-center border-b border-white/5 relative">
+                <div class="bg-white w-full rounded-lg py-3 px-2 flex justify-center items-center shadow-inner">
+                    <img src="<?php echo base_url('assets/img/logo-tja.png'); ?>" alt="TJAECH" class="max-h-12 w-auto object-contain">
                 </div>
-                <button class="lg:hidden text-white" onclick="toggleSidebar()">
+                <button class="lg:hidden text-white absolute -right-12 top-4 bg-primary rounded-r p-2 shadow-lg" onclick="toggleSidebar()">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
