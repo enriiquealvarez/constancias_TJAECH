@@ -53,12 +53,10 @@
     <div class="flex h-screen overflow-hidden relative">
         <!-- Sidebar -->
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-primary text-white flex flex-col shrink-0 shadow-xl sidebar-hidden lg:relative lg:translate-x-0 transition-transform duration-300">
-            <div class="p-6 flex items-center justify-between lg:justify-center border-b border-white/5 relative">
-                <div class="bg-white w-full rounded-lg py-3 px-2 flex justify-center items-center shadow-inner">
-                    <img src="<?php echo base_url('assets/img/logo-tja.png'); ?>" alt="TJAECH" class="max-h-12 w-auto object-contain">
-                </div>
-                <button class="lg:hidden text-white absolute -right-12 top-4 bg-primary rounded-r p-2 shadow-lg" onclick="toggleSidebar()">
-                    <span class="material-symbols-outlined">close</span>
+            <div class="bg-white h-24 flex items-center justify-center border-b-[3px] border-accent relative px-6 shrink-0 w-full shadow-sm">
+                <img src="<?php echo base_url('assets/img/logo-tja.png'); ?>" alt="TJAECH" class="h-[60px] w-auto object-contain transition-transform hover:scale-105 duration-300">
+                <button class="lg:hidden text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 bg-slate-100 hover:bg-slate-200 rounded p-1.5 transition-colors" onclick="toggleSidebar()">
+                    <span class="material-symbols-outlined text-lg">close</span>
                 </button>
             </div>
             <nav class="flex-1 px-0 mt-4 overflow-y-auto">
