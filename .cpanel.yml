@@ -1,4 +1,5 @@
 ---
 deployment:
   tasks:
-    - export /home/tjaechgob/constancias.tjaech.gob.mx
+    - export DEPLOYPATH=/home/tjaechgob/constancias.tjaech.gob.mx/
+    - /bin/cp -R ./* $DEPLOYPATH
