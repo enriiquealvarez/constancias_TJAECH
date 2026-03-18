@@ -75,15 +75,15 @@
             const data = await fetchJson('/admin/api/courses?q=' + encodeURIComponent(q));
             current = data.data;
             table.innerHTML = data.data.map(r => `
-                <tr>
-                    <td>${r.name}</td>
-                    <td>${r.edition || ''}</td>
-                    <td>${r.start_date || ''} ${r.end_date ? ' - ' + r.end_date : ''}</td>
-                    <td>${r.modality || ''}</td>
-                    <td class="text-end">
-                        ${canManage ? `<div class="tja-actions">
-                            <button class="btn btn-sm tja-btn-outline tja-action-btn tja-btn-edit" data-edit="${r.id}"><i class="fa-regular fa-pen-to-square"></i> Editar</button>
-                            <button class="btn btn-sm tja-btn-outline tja-btn-danger tja-action-btn" data-del="${r.id}"><i class="fa-regular fa-trash-can"></i> Eliminar</button>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-5 py-4 text-sm font-semibold text-primary">${r.name}</td>
+                    <td class="px-5 py-4 text-sm text-slate-600">${r.edition || ''}</td>
+                    <td class="px-5 py-4 text-sm text-slate-600">${r.start_date || ''} ${r.end_date ? ' - ' + r.end_date : ''}</td>
+                    <td class="px-5 py-4 text-sm text-slate-600">${r.modality || ''}</td>
+                    <td class="px-5 py-4 text-right">
+                        ${canManage ? `<div class="flex justify-end gap-2">
+                            <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all tja-action-btn" data-edit="${r.id}" title="Editar"><span class="material-symbols-outlined text-[18px] pointer-events-none">edit</span></button>
+                            <button class="p-1.5 hover:bg-red-50 rounded-md text-slate-400 hover:text-red-500 transition-all tja-action-btn" data-del="${r.id}" title="Eliminar"><span class="material-symbols-outlined text-[18px] pointer-events-none">delete</span></button>
                         </div>` : ''}
                     </td>
                 </tr>
@@ -121,8 +121,10 @@
         }
 
         table.addEventListener('click', async (e) => {
-            const edit = e.target.getAttribute('data-edit');
-            const del = e.target.getAttribute('data-del');
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const edit = btn.getAttribute('data-edit');
+            const del = btn.getAttribute('data-del');
             if (edit && canManage) {
                 const row = current.find(c => String(c.id) === String(edit));
                 if (!row) return;
@@ -166,14 +168,14 @@
             const data = await fetchJson('/admin/api/participants?q=' + encodeURIComponent(q));
             current = data.data;
             table.innerHTML = data.data.map(r => `
-                <tr>
-                    <td>${r.full_name}</td>
-                    <td>${r.email || ''}</td>
-                    <td>${r.type === 'EXTERNAL' ? 'Externo' : 'Interno'}</td>
-                    <td class="text-end">
-                        ${canManage ? `<div class="tja-actions">
-                            <button class="btn btn-sm tja-btn-outline tja-action-btn tja-btn-edit" data-edit="${r.id}"><i class="fa-regular fa-pen-to-square"></i> Editar</button>
-                            <button class="btn btn-sm tja-btn-outline tja-btn-danger tja-action-btn" data-del="${r.id}"><i class="fa-regular fa-trash-can"></i> Eliminar</button>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-5 py-4 text-sm font-semibold text-primary">${r.full_name}</td>
+                    <td class="px-5 py-4 text-sm text-slate-600">${r.email || ''}</td>
+                    <td class="px-5 py-4"><span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 uppercase">${r.type === 'EXTERNAL' ? 'Externo' : 'Interno'}</span></td>
+                    <td class="px-5 py-4 text-right">
+                        ${canManage ? `<div class="flex justify-end gap-2">
+                            <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all tja-action-btn" data-edit="${r.id}" title="Editar"><span class="material-symbols-outlined text-[18px] pointer-events-none">edit</span></button>
+                            <button class="p-1.5 hover:bg-red-50 rounded-md text-slate-400 hover:text-red-500 transition-all tja-action-btn" data-del="${r.id}" title="Eliminar"><span class="material-symbols-outlined text-[18px] pointer-events-none">delete</span></button>
                         </div>` : ''}
                     </td>
                 </tr>
@@ -210,8 +212,10 @@
         }
 
         table.addEventListener('click', async (e) => {
-            const edit = e.target.getAttribute('data-edit');
-            const del = e.target.getAttribute('data-del');
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const edit = btn.getAttribute('data-edit');
+            const del = btn.getAttribute('data-del');
             if (edit && canManage) {
                 const row = current.find(p => String(p.id) === String(edit));
                 if (!row) return;

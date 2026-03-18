@@ -1,84 +1,78 @@
-<div class="grid grid-cols-1 lg:grid-cols-10 gap-6 lg:gap-8 pb-20 lg:pb-0">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 pb-20 lg:pb-0">
     <!-- Left Column: Form -->
     <?php if (!empty($can_manage)): ?>
-    <div class="lg:col-span-3">
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <div class="flex items-center gap-2 mb-6">
-                <span class="material-symbols-outlined text-accent">add_circle</span>
-                <h2 class="text-base font-bold text-primary uppercase tracking-tight">Reg. Participante</h2>
+    <div class="lg:col-span-4">
+        <div class="bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden border border-slate-100 relative">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary to-accent"></div>
+            <div class="p-6 bg-slate-50/50 border-b border-slate-100 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-[18px]">person_add</span>
+                </div>
+                <h2 class="text-[13px] font-bold text-primary uppercase tracking-widest">Nuevo Participante</h2>
             </div>
-            <form id="participantForm" class="space-y-4">
-                <input type="hidden" name="id">
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Nombre completo</label>
-                    <input type="text" name="full_name" required class="w-full h-11 px-4 rounded-lg border border-slate-200 text-sm focus:ring-corporate-blue focus:border-corporate-blue bg-white">
-                </div>
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Correo (opcional)</label>
-                    <input type="email" name="email" class="w-full h-11 px-4 rounded-lg border border-slate-200 text-sm focus:ring-corporate-blue focus:border-corporate-blue bg-white">
-                </div>
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Tipo</label>
-                    <select name="type" class="w-full h-11 px-4 rounded-lg border border-slate-200 text-sm focus:ring-corporate-blue focus:border-corporate-blue bg-white">
-                        <option value="INTERNAL">Interno</option>
-                        <option value="EXTERNAL">Externo</option>
-                    </select>
-                </div>
-                <div class="pt-4 space-y-3">
-                    <button type="submit" class="w-full bg-corporate-blue hover:bg-opacity-90 text-white font-bold py-3 rounded-lg shadow-md transition-all uppercase tracking-widest text-xs flex justify-center items-center gap-2">
-                        <span class="material-symbols-outlined text-lg">save</span> Guardar
-                    </button>
-                    <button type="button" id="participantReset" class="w-full bg-white border-2 border-slate-200 text-corporate-blue hover:bg-slate-50 font-bold py-2.5 rounded-lg transition-all uppercase tracking-widest text-xs flex justify-center items-center gap-2">
-                        <span class="material-symbols-outlined text-lg">mop</span> Limpiar
-                    </button>
-                </div>
-            </form>
+            <div class="p-6">
+                <form id="participantForm" class="space-y-5">
+                    <input type="hidden" name="id">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Nombre Completo</label>
+                        <input type="text" name="full_name" required class="w-full h-11 px-4 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors placeholder-slate-300" placeholder="Nombre completo, iniciando por apellidos">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Correo Electrónico</label>
+                        <input type="email" name="email" class="w-full h-11 px-4 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors placeholder-slate-300" placeholder="(Opcional)">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Tipo de Participante</label>
+                        <select name="type" class="w-full h-11 px-4 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors text-slate-600">
+                            <option value="INTERNAL">Interno (Personal del TJAECH)</option>
+                            <option value="EXTERNAL">Externo</option>
+                        </select>
+                    </div>
+                    <div class="pt-4 flex items-center gap-3">
+                        <button type="submit" class="flex-1 bg-primary hover:bg-primary/95 text-white font-bold py-3 px-4 rounded-lg shadow-[0_4px_14px_0_rgba(27,69,111,0.39)] hover:shadow-[0_6px_20px_rgba(27,69,111,0.23)] hover:-translate-y-0.5 transition-all text-[11px] uppercase tracking-widest flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">save</span> Confirmar Registro
+                        </button>
+                        <button type="button" id="participantReset" class="w-12 h-12 bg-white border border-slate-200 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-colors flex justify-center items-center" title="Limpiar formulario">
+                            <span class="material-symbols-outlined text-[20px]">mop</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     <?php endif; ?>
 
     <!-- Right Column: List / Table -->
-    <div class="<?php echo !empty($can_manage) ? 'lg:col-span-7' : 'lg:col-span-10'; ?>">
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="p-4 lg:p-6 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50/30">
-                <span class="text-sm font-bold text-slate-800">Participantes Registrados</span>
-                <div class="relative w-full sm:w-64">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
-                    <input type="text" id="participantSearch" class="w-full pl-10 pr-4 py-2 bg-white border-slate-200 rounded-lg text-sm focus:ring-corporate-blue focus:border-corporate-blue" placeholder="Buscar por nombre o correo">
+    <div class="<?php echo !empty($can_manage) ? 'lg:col-span-8' : 'lg:col-span-12'; ?>">
+        <div class="bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden border border-slate-100 flex flex-col h-full min-h-[500px]">
+            <!-- Header Filter Area -->
+            <div class="p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b border-slate-100/60 relative">
+                <div class="absolute left-0 top-0 bottom-0 w-1 bg-accent"></div>
+                <div>
+                    <h3 class="text-xl font-bold text-primary tracking-tight">Padrón de Participantes</h3>
+                    <p class="text-[13px] text-slate-500 mt-1">Directorio de servidores públicos y externos.</p>
+                </div>
+                <div class="relative w-full md:w-72">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] pointer-events-none">search</span>
+                    <input type="text" id="participantSearch" class="w-full pl-11 pr-4 py-2.5 bg-slate-50/80 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary focus:bg-white transition-colors" placeholder="Buscar por nombre o correo">
                 </div>
             </div>
 
-            <div class="overflow-x-auto w-full">
+            <!-- Table Area -->
+            <div class="overflow-x-auto w-full flex-1">
                 <table class="w-full text-left border-collapse min-w-[600px]">
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-200">
-                            <th class="px-5 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Nombre</th>
-                            <th class="px-5 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Correo</th>
-                            <th class="px-5 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tipo</th>
-                            <th class="px-5 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-right">Acciones</th>
+                            <th class="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Nombre Completo</th>
+                            <th class="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Correo</th>
+                            <th class="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Tipo</th>
+                            <th class="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-right">Opciones</th>
                         </tr>
                     </thead>
                     <tbody id="participantTable" data-can-manage="<?php echo !empty($can_manage) ? '1' : '0'; ?>" class="divide-y divide-slate-100">
                     </tbody>
                 </table>
             </div>
-            
         </div>
     </div>
 </div>
-<script>
-    const observer = new MutationObserver(() => {
-        document.querySelectorAll('#participantTable tr').forEach(tr => tr.classList.add('hover:bg-slate-50', 'transition-colors'));
-        document.querySelectorAll('#participantTable td').forEach(td => td.classList.add('px-5', 'py-4', 'text-sm', 'text-slate-600'));
-        document.querySelectorAll('#participantTable button.tja-action-btn').forEach(btn => {
-            btn.className = 'p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all ml-1 tja-action-btn';
-            if(btn.classList.contains('tja-btn-edit')) btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">edit</span>';
-            if(btn.classList.contains('tja-btn-danger')) {
-              btn.className = 'p-1.5 hover:bg-red-50 rounded-md text-slate-400 hover:text-red-500 transition-all ml-1 tja-action-btn';
-              btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">delete</span>';
-            }
-        });
-    });
-    const ptable = document.getElementById('participantTable');
-    if(ptable) observer.observe(ptable, {childList: true});
-</script>
