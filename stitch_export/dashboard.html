@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#111426",
+                        "corporate-blue": "#1b456f",
+                        "accent": "#C4AF6B",
+                        "background-light": "#F3F6FB",
+                        "background-dark": "#13191f",
+                        "success": "#2D6A4F",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .sidebar-active { border-left: 4px solid #C4AF6B; background-color: rgba(196, 175, 107, 0.1); }
+        @media (max-width: 1024px) {
+            .sidebar-hidden { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
+            .sidebar-visible { transform: translateX(0); transition: transform 0.3s ease-in-out; }
+        }
+    </style>
+<title>Gestión de Constancias y Certificados</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 overflow-x-hidden">
+<div class="flex h-screen overflow-hidden relative">
+<!-- Sidebar (Hidden on mobile, accessible via JS/Toggle) -->
+<aside class="fixed inset-y-0 left-0 z-50 w-64 bg-primary text-white flex flex-col shrink-0 shadow-xl sidebar-hidden lg:relative lg:translate-x-0" id="sidebar">
+<div class="p-6 flex items-center justify-between lg:justify-start gap-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary font-bold">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold leading-tight uppercase tracking-wider">Gestión de</span>
+<span class="text-xs font-light text-accent">Constancias</span>
+</div>
+</div>
+<button class="lg:hidden text-white" onclick="toggleSidebar()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<nav class="flex-1 px-0 mt-4 overflow-y-auto">
+<div class="px-6 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Menú Principal</div>
+<a class="flex items-center gap-4 px-6 py-3 text-slate-300 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-slate-300 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span class="text-sm font-medium">Cursos</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-slate-300 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span class="text-sm font-medium">Participantes</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-accent sidebar-active bg-white/5" href="#">
+<span class="material-symbols-outlined text-[20px]">workspace_premium</span>
+<span class="text-sm font-bold">Constancias</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-slate-300 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">policy</span>
+<span class="text-sm font-medium">Auditoría</span>
+</a>
+</nav>
+<div class="p-6 border-t border-white/10">
+<div class="flex items-center gap-3 p-2 rounded-lg bg-white/5">
+<div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center overflow-hidden">
+<img alt="Admin Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO2KXJuCMI9C5pVRyiSgICoqEX6gsTeXIOsWE5TSpUaSlt9kI0Cj_O5Ut0X52fy7iVSFeZOpQuGe-k_jaIcn0aBQKkW95qN2iXvonOX1Ohz5y8WHaD51EpO9mCUpzJIIxtRFTCkKmSPu5sNt8y2b5UM5vjL0Go6I3Bshz1SKy4Ansyi4lU4dC1V44b4fX0tSmSgkXRwePlzOhBw7iHjWQHsaIhs9nGOWcE3tDSEh4ZZIwK3t-p-NO5ObYJ73Li6Pd8ZbkmL_qmIYT2"/>
+</div>
+<div class="flex flex-col overflow-hidden">
+<span class="text-xs font-bold truncate">Admin General</span>
+<span class="text-[10px] text-slate-400 truncate">admin@gob.mx</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-hidden">
+<!-- Topbar -->
+<header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 lg:px-8 shrink-0">
+<div class="flex items-center gap-3">
+<button class="lg:hidden text-primary" onclick="toggleSidebar()">
+<span class="material-symbols-outlined text-[28px]">menu</span>
+</button>
+<h1 class="text-base lg:text-lg font-bold text-primary truncate">Constancias</h1>
+<span class="hidden sm:inline-block text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded">V 2.4.0</span>
+</div>
+<div class="flex items-center gap-3 lg:gap-6">
+<div class="flex items-center gap-2 text-slate-500 hover:text-primary cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+</div>
+<div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
+<button class="flex items-center gap-1 text-slate-600 hover:text-red-600 font-medium text-sm transition-colors">
+<span class="hidden sm:inline">Cerrar Sesión</span>
+<span class="material-symbols-outlined text-[20px]">logout</span>
+</button>
+</div>
+</header>
+<!-- Page Content -->
+<div class="flex-1 overflow-y-auto p-4 lg:p-8 bg-background-light">
+<!-- 1. Quick Statistics Section -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">description</span>
+</div>
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Emitidas</p>
+<p class="text-xl font-bold text-primary">128</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-success">verified</span>
+</div>
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Verificadas</p>
+<p class="text-xl font-bold text-primary">115</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-orange-600">pending_actions</span>
+</div>
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pendientes</p>
+<p class="text-xl font-bold text-primary">13</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-10 gap-6 lg:gap-8">
+<!-- Left Column: Form -->
+<div class="lg:col-span-3">
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-accent">add_circle</span>
+<h2 class="text-base font-bold text-primary uppercase tracking-tight">Emitir constancia</h2>
+</div>
+<form class="space-y-5">
+<div class="space-y-1.5">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Participante</label>
+<select class="w-full rounded-lg border-slate-200 text-sm focus:ring-corporate-blue focus:border-corporate-blue appearance-none bg-white py-2.5">
+<option>Seleccionar participante...</option>
+<option>García López Juan Alberto</option>
+<option>Martínez Ruiz Elena</option>
+<option>Sánchez Pérez Ricardo</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Curso</label>
+<select class="w-full rounded-lg border-slate-200 text-sm focus:ring-corporate-blue focus:border-corporate-blue bg-white py-2.5">
+<option>Seleccionar curso...</option>
+<option>Administración Pública Federal</option>
+<option>Ética e Integridad 2024</option>
+<option>Transformación Digital</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Tipo de documento</label>
+<select class="w-full rounded-lg border-slate-200 text-sm focus:ring-corporate-blue focus:border-corporate-blue bg-white py-2.5">
+<option>Certificado de Aprobación</option>
+<option>Constancia de Participación</option>
+<option>Diploma de Excelencia</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Estatus inicial</label>
+<div class="flex gap-4 pt-1">
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="text-corporate-blue focus:ring-corporate-blue" name="status" type="radio"/>
+<span class="text-sm text-slate-700">Emitido</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="text-corporate-blue focus:ring-corporate-blue" name="status" type="radio"/>
+<span class="text-sm text-slate-700">Pendiente</span>
+</label>
+</div>
+</div>
+<div class="pt-4 space-y-3">
+<!-- 2. Updated button colors -->
+<button class="w-full bg-corporate-blue hover:bg-opacity-90 text-white font-bold py-3 rounded-lg shadow-md transition-all uppercase tracking-widest text-xs" type="submit">
+                                    Emitir Documento
+                                </button>
+<button class="w-full bg-white border-2 border-slate-200 text-corporate-blue hover:bg-slate-50 font-bold py-2.5 rounded-lg transition-all uppercase tracking-widest text-xs" type="reset">
+                                    Limpiar Formulario
+                                </button>
+</div>
+</form>
+</div>
+<div class="mt-6 p-4 rounded-xl border-l-4 border-accent bg-primary text-white shadow-lg">
+<p class="text-[11px] font-medium opacity-80 uppercase tracking-widest mb-1">Aviso Importante</p>
+<p class="text-xs leading-relaxed">Cada constancia emitida genera un token único de seguridad para verificación vía QR institucional.</p>
+</div>
+</div>
+<!-- Right Column: List of Cards for Mobile / Table for Desktop -->
+<div class="lg:col-span-7">
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<!-- Table Header / Search -->
+<div class="p-4 lg:p-6 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-3 w-full sm:w-auto">
+<span class="text-sm font-bold text-slate-800">Registros Recientes</span>
+<span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full">128 Total</span>
+</div>
+<div class="relative w-full sm:w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-corporate-blue focus:border-corporate-blue" placeholder="Buscar..." type="text"/>
+</div>
+</div>
+<!-- 4. Records List (Converted to cards for mobile, table on large screens) -->
+<div class="block lg:hidden">
+<div class="divide-y divide-slate-100">
+<!-- Card 1 -->
+<div class="p-4 hover:bg-slate-50 transition-colors">
+<div class="flex justify-between items-start mb-3">
+<div>
+<div class="text-sm font-semibold text-primary">García López Juan</div>
+<div class="text-[10px] text-slate-400 font-medium uppercase">ID: 00921-MX</div>
+</div>
+<span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-success bg-success/10 px-2 py-1 rounded-full uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                            Verificado
+                                        </span>
+</div>
+<div class="grid grid-cols-2 gap-2 text-xs mb-4">
+<div>
+<p class="text-[9px] uppercase text-slate-400 font-bold">Curso</p>
+<p class="text-slate-600 truncate">Ética e Integridad</p>
+</div>
+<div>
+<p class="text-[9px] uppercase text-slate-400 font-bold">Tipo</p>
+<p class="text-slate-600">Constancia</p>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-slate-50 pt-3">
+<span class="font-mono text-[10px] text-slate-400">#F92A-881C</span>
+<div class="flex gap-1">
+<button class="p-1.5 text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-[18px]">qr_code_2</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-[18px]">link</span></button>
+<button class="p-1.5 text-slate-400 hover:text-blue-600"><span class="material-symbols-outlined text-[18px]">edit_note</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="p-4 hover:bg-slate-50 transition-colors">
+<div class="flex justify-between items-start mb-3">
+<div>
+<div class="text-sm font-semibold text-primary">Martínez Ruiz Elena</div>
+<div class="text-[10px] text-slate-400 font-medium uppercase">ID: 01045-MX</div>
+</div>
+<span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-success bg-success/10 px-2 py-1 rounded-full uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                            Verificado
+                                        </span>
+</div>
+<div class="grid grid-cols-2 gap-2 text-xs mb-4">
+<div>
+<p class="text-[9px] uppercase text-slate-400 font-bold">Curso</p>
+<p class="text-slate-600 truncate">Admón. Pública</p>
+</div>
+<div>
+<p class="text-[9px] uppercase text-slate-400 font-bold">Tipo</p>
+<p class="text-accent font-bold uppercase">Certificado</p>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-slate-50 pt-3">
+<span class="font-mono text-[10px] text-slate-400">#B01X-442P</span>
+<div class="flex gap-1">
+<button class="p-1.5 text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-[18px]">qr_code_2</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-[18px]">link</span></button>
+<button class="p-1.5 text-slate-400 hover:text-blue-600"><span class="material-symbols-outlined text-[18px]">edit_note</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Desktop Table View -->
+<div class="hidden lg:block overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/50">
+<th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Participante</th>
+<th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Curso</th>
+<th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tipo</th>
+<th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Estatus</th>
+<th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Token</th>
+<th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="text-sm font-semibold text-primary">García López Juan</div>
+<div class="text-[10px] text-slate-400 font-medium uppercase">ID: 00921-MX</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600">Ética e Integridad</td>
+<td class="px-6 py-4">
+<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600">CONSTANCIA</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-success bg-success/10 px-2 py-1 rounded-full uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span> Verificado
+                                            </span>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-400">#F92A-881C</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-primary/5 rounded-md text-slate-400 hover:text-primary transition-all"><span class="material-symbols-outlined text-[18px]">qr_code_2</span></button>
+<button class="p-1.5 hover:bg-primary/5 rounded-md text-slate-400 hover:text-primary transition-all"><span class="material-symbols-outlined text-[18px]">link</span></button>
+<button class="p-1.5 hover:bg-primary/5 rounded-md text-slate-400 hover:text-blue-600 transition-all"><span class="material-symbols-outlined text-[18px]">edit_note</span></button>
+<button class="p-1.5 hover:bg-red-50 rounded-md text-slate-400 hover:text-red-500 transition-all"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer -->
+<div class="px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+<span class="text-xs text-slate-400">Mostrando 2 de 128 registros</span>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-slate-200 rounded text-xs font-bold text-slate-500 hover:bg-slate-50">Ant.</button>
+<button class="px-3 py-1 bg-accent text-primary rounded text-xs font-bold shadow-sm">1</button>
+<button class="px-3 py-1 border border-slate-200 rounded text-xs font-bold text-slate-500 hover:bg-slate-50">Sig.</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- 3. Mobile Navigation Bottom Bar -->
+<div class="lg:hidden fixed bottom-0 left-0 right-0 bg-primary h-16 flex items-center justify-around border-t border-white/10 px-4 z-40">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-[9px] font-bold uppercase">Inicio</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span class="text-[9px] font-bold uppercase">Cursos</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-accent" href="#">
+<span class="material-symbols-outlined text-[24px]">workspace_premium</span>
+<span class="text-[9px] font-bold uppercase">Const.</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined text-[20px]">policy</span>
+<span class="text-[9px] font-bold uppercase">Auditoría</span>
+</a>
+<button class="flex flex-col items-center gap-1 text-slate-400" onclick="toggleSidebar()">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+<span class="text-[9px] font-bold uppercase">Más</span>
+</button>
+</div>
+</div>
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar.classList.contains('sidebar-hidden')) {
+            sidebar.classList.remove('sidebar-hidden');
+            sidebar.classList.add('sidebar-visible');
+        } else {
+            sidebar.classList.add('sidebar-hidden');
+            sidebar.classList.remove('sidebar-visible');
+        }
+    }
+</script>
+</body></html>

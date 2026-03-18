@@ -259,22 +259,30 @@
         const load = async (q = '') => {
             const data = await fetchJson('/admin/api/certificates?q=' + encodeURIComponent(q));
             table.innerHTML = data.data.map(r => {
-                const badge = r.status === 'VERIFIED' ? 'tja-badge-success' : 'tja-badge-danger';
+                const isVerified = r.status === 'VERIFIED';
                 const manageButtons = canManage ? `
-                            <button class="btn btn-sm tja-btn-outline tja-action-btn tja-btn-status" data-status="${r.id}" data-current="${r.status}"><i class="fa-regular fa-circle-dot"></i> Cambiar estado</button>
-                            <button class="btn btn-sm tja-btn-outline tja-btn-danger tja-action-btn" data-del="${r.id}"><i class="fa-regular fa-trash-can"></i> Eliminar</button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-blue-600 transition-all" data-status="${r.id}" data-current="${r.status}" title="Cambiar estado"><span class="material-symbols-outlined text-[18px]">sync_alt</span></button>
+                    <button class="p-1.5 hover:bg-red-50 rounded-md text-slate-400 hover:text-red-500 transition-all" data-del="${r.id}" title="Eliminar"><span class="material-symbols-outlined text-[18px]">delete</span></button>
                 ` : '';
                 return `
-                    <tr>
-                        <td>${r.full_name}</td>
-                        <td>${r.course_name}</td>
-                        <td>${r.doc_type}</td>
-                        <td><span class="badge ${badge}">${r.status === 'VERIFIED' ? 'Verificado' : 'No verificado'}</span></td>
-                        <td class="tja-token-cell"><code>${r.token}</code></td>
-                        <td class="text-end">
-                            <div class="tja-actions tja-actions-row">
-                                <button class="btn btn-sm tja-btn-outline tja-action-btn tja-btn-qr" data-qr="${r.token}"><i class="fa-solid fa-qrcode"></i> QR</button>
-                                <button class="btn btn-sm tja-btn-outline tja-action-btn tja-btn-url" data-copy="${r.token}"><i class="fa-regular fa-copy"></i> URL</button>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-5 py-4">
+                            <div class="text-sm font-semibold text-primary truncate max-w-[200px]">${r.full_name}</div>
+                        </td>
+                        <td class="px-5 py-4 text-sm text-slate-600 truncate max-w-[200px]">${r.course_name}</td>
+                        <td class="px-5 py-4">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 uppercase">${r.doc_type}</span>
+                        </td>
+                        <td class="px-5 py-4">
+                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold ${isVerified ? 'text-success bg-success/10' : 'text-orange-600 bg-orange-100'} px-2 py-1 rounded-full uppercase">
+                                <span class="w-1.5 h-1.5 rounded-full ${isVerified ? 'bg-success' : 'bg-orange-600'}"></span> ${isVerified ? 'Verificado' : 'Pendiente'}
+                            </span>
+                        </td>
+                        <td class="px-5 py-4 font-mono text-xs text-slate-500 bg-slate-50/50 rounded pointer-events-auto selection:bg-corporate-blue selection:text-white">${r.token}</td>
+                        <td class="px-5 py-4 text-right">
+                            <div class="flex justify-end gap-2">
+                                <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all" data-qr="${r.token}" title="Ver QR"><span class="material-symbols-outlined text-[18px]">qr_code_2</span></button>
+                                <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all" data-copy="${r.token}" title="Copiar URL"><span class="material-symbols-outlined text-[18px]">link</span></button>
                                 ${manageButtons}
                             </div>
                         </td>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1b456f",
+                        "institutional-gold": "#C4AF6B",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#0a0c1a", // Slightly darker blue
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<title>TJAECH - Acceso Administrativo</title>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+            background: radial-gradient(circle at top right, rgba(196, 175, 107, 0.08), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(196, 175, 107, 0.05), transparent 40%),
+                        #0a0c1a;
+        }
+    </style>
+</head>
+<body class="font-display min-h-screen flex items-center justify-center p-4">
+<!-- Central Login Card -->
+<div class="w-full max-w-[440px] bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col">
+<!-- Header / Logo Area -->
+<div class="pt-10 pb-6 px-8 flex flex-col items-center">
+<div class="w-full h-24 bg-slate-100 rounded-lg flex items-center justify-center border-2 border-dashed border-slate-300 mb-6 group/logo">
+<div class="flex flex-col items-center text-slate-400 group-hover/logo:text-primary transition-colors">
+<span class="material-symbols-outlined text-4xl mb-1">account_balance</span>
+<span class="text-xs font-semibold uppercase tracking-widest">Logotipo Oficial TJAECH</span>
+</div>
+</div>
+<h1 class="text-slate-900 text-2xl font-bold tracking-tight text-center">
+                Acceso Administrativo
+            </h1>
+<p class="text-slate-500 text-sm mt-2 text-center">
+                Ingrese sus credenciales para gestionar el portal
+            </p>
+</div>
+<!-- Form Area -->
+<div class="px-8 pb-10">
+<form action="#" class="space-y-5" method="POST">
+<!-- Email Field -->
+<div>
+<label class="block text-slate-700 text-sm font-semibold mb-2" for="email">
+                        Correo electrónico
+                    </label>
+<div class="relative">
+<input class="w-full h-12 px-4 rounded-lg border border-slate-200 focus:border-institutional-gold focus:ring-2 focus:ring-institutional-gold/20 bg-white text-slate-900 placeholder:text-slate-400 transition-all outline-none" id="email" name="email" placeholder="ejemplo@tjaech.gob.mx" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<label class="block text-slate-700 text-sm font-semibold" for="password">
+                            Contraseña
+                        </label>
+</div>
+<div class="relative flex">
+<input class="flex-1 h-12 pl-4 pr-10 rounded-lg border border-slate-200 focus:border-institutional-gold focus:ring-2 focus:ring-institutional-gold/20 bg-white text-slate-900 placeholder:text-slate-400 transition-all outline-none" id="password" name="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-institutional-gold transition-colors" type="button">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</div>
+</div>
+<!-- Forgot Password Option (Repositioned for subtlety) -->
+<div class="flex justify-end">
+<a class="text-xs font-medium text-slate-500 hover:text-primary transition-colors hover:underline" href="#">¿Olvidó su contraseña?</a>
+</div>
+<!-- Login Button -->
+<button class="w-full h-12 bg-institutional-gold hover:opacity-90 text-white font-bold rounded-lg transition-all shadow-lg shadow-institutional-gold/20 flex items-center justify-center gap-2 mt-4" type="submit">
+<span>Ingresar</span>
+<span class="material-symbols-outlined text-lg">login</span>
+</button>
+</form>
+<!-- Footer Link -->
+<div class="mt-8 pt-6 border-t border-slate-100 flex justify-center">
+<a class="flex items-center gap-2 text-slate-500 hover:text-primary text-sm font-medium transition-colors" href="#">
+<span class="material-symbols-outlined text-base">arrow_back</span>
+                    Volver al Portal de Búsqueda
+                </a>
+</div>
+</div>
+</div>
+<!-- Decorative background elements -->
+<div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+<div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-institutional-gold/5 rounded-full blur-[120px]"></div>
+<div class="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-institutional-gold/5 rounded-full blur-[120px]"></div>
+</div>
+</body></html>

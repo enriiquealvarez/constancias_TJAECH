@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#1b456f",
+              "background-light": "#f6f7f8",
+              "background-dark": "#13191f",
+              "accent-dark": "#111426",
+              "neutral-bg": "#F3F6FB"
+            },
+            fontFamily: {
+              "display": ["Public Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<title>Sistema de Verificación de Documentos - TJAECH</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Header Superior Fijo -->
+<header class="fixed top-0 w-full z-50 bg-primary border-b border-primary/20 shadow-md">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-20">
+<div class="flex items-center gap-4">
+<div class="bg-white p-2 rounded-lg">
+<img alt="Logotipo Oficial TJAECH" class="h-10 w-auto" data-alt="Logotipo institucional del Tribunal de Justicia Administrativa" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXIwAdqk47y_SNk1dMy2LYIN6q6SZL0rTEAWe-vbCD15-M9-x3fcCaQAGrmMn8kY4kF7eEo3frCMTRSCp4j2zG2yqnmPebsAvmInPiOKZCvus9MND22qWGNkTSf-DMuHmNXJUjbXPuATYeZNO-PNVmyK9ApRQauKgpnJ65W_flNYmW_uabNdlYUn4G8BBtFhercQ5wYc2ZLJACDsBIOIz8SuOiwiKUwt8xPx9_ClGWw1RuThWn40KL9ADQxg_Gl3i9ei4ss_hYXQec"/>
+</div>
+<div class="hidden md:block text-white">
+<p class="text-xs font-semibold uppercase tracking-wider opacity-80">Poder Judicial</p>
+<p class="text-sm font-bold">Estado de Chiapas</p>
+</div>
+</div>
+<nav class="flex items-center gap-6">
+<button class="text-white hover:text-white/80 transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="text-white hover:text-white/80 transition-colors">
+<span class="material-symbols-outlined">language</span>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-20">
+<!-- Hero Section -->
+<section class="bg-neutral-bg dark:bg-slate-900/50 py-16 md:py-24 px-4 text-center">
+<div class="max-w-4xl mx-auto">
+<h1 class="text-primary dark:text-slate-100 text-3xl md:text-5xl font-extrabold leading-tight tracking-tight mb-4">
+                    Sistema de Verificación de Documentos
+                </h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg md:text-xl font-medium max-w-2xl mx-auto">
+                    Tribunal de Justicia Administrativa del Estado de Chiapas
+                </p>
+</div>
+</section>
+<!-- Bloque Central: Tarjeta de Validación -->
+<section class="max-w-3xl mx-auto px-4 -mt-12 mb-20">
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl p-8 md:p-12 border border-slate-100 dark:border-slate-700">
+<div class="flex flex-col items-center text-center mb-10">
+<div class="bg-primary/10 p-4 rounded-full mb-6">
+<span class="material-symbols-outlined text-primary text-4xl">verified_user</span>
+</div>
+<h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4">
+                        Validar Constancia, Certificado o Reconocimiento
+                    </h2>
+<p class="text-slate-500 dark:text-slate-400 text-base md:text-lg leading-relaxed">
+                        Ingrese el token impreso en su documento web o escanee el código QR provisto para confirmar la autenticidad del mismo.
+                    </p>
+</div>
+<form class="space-y-6">
+<div class="relative group">
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ml-1" for="token">
+                            Token de Verificación
+                        </label>
+<div class="relative flex items-center">
+<input class="block w-full h-16 px-6 pr-14 text-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-slate-900 dark:text-white placeholder:text-slate-400" id="token" name="token" placeholder="Ejemplo: dgsU..." type="text"/>
+<div class="absolute right-4 text-slate-400 group-focus-within:text-primary">
+<span class="material-symbols-outlined text-2xl">qr_code_scanner</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-5 px-8 rounded-xl shadow-lg shadow-primary/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3 text-lg" type="submit">
+<span class="material-symbols-outlined">search_check</span>
+                        Verificar Documento
+                    </button>
+</form>
+<div class="mt-10 pt-8 border-t border-slate-100 dark:border-slate-700 flex flex-col md:flex-row justify-center gap-8 text-sm text-slate-500">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-green-600">security</span>
+<span>Conexión Segura SSL</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-600">info</span>
+<span>Ayuda sobre el Token</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-accent-dark text-white py-12 px-4">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+<div class="space-y-4 max-w-sm">
+<img alt="Logo Footer TJAECH" class="h-12 w-auto opacity-90" data-alt="Logotipo oficial blanco sobre fondo oscuro" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOrQ4Yg1gN6cDj9OFRwhJc4270mZkfRC_RLaNXygYbF588PF3a46v1uUGt9cRlYa45Ud8ekWAtIhI8KOphuQqVIckM4ybGvaqu7XO7moTB1_Yzk8-UBUI95cd7XKVuMtz6ZrDHbcT4FWm8G1r9gevWHA63IG_fxRgbgHSKik1DXM5UD1wdDfmIrrWQYdfRccXsGR36LEerU6CVb9nCUSoxdXeCVfI08SbiZkKukqL04MZKyl_0ltEpV7Hmu1fP5WwNlPV3yqDbuplD"/>
+<p class="text-slate-400 text-sm leading-relaxed">
+                    Tribunal de Justicia Administrativa del Estado de Chiapas. 
+                    Garantizando la legalidad y transparencia en la administración pública.
+                </p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-12">
+<div>
+<h4 class="font-bold text-lg mb-4 text-white">Soporte</h4>
+<ul class="space-y-3 text-slate-400 text-sm">
+<li><a class="hover:text-white transition-colors" href="#">Guía de usuario</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Preguntas frecuentes</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Aviso de Privacidad</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-lg mb-4 text-white">Contacto</h4>
+<ul class="space-y-3 text-slate-400 text-sm">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">call</span>
+                            (961) 123 4567
+                        </li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">mail</span>
+                            soporte@tjaech.gob.mx
+                        </li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                            Tuxtla Gutiérrez, Chiapas
+                        </li>
+</ul>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/10 text-center text-slate-500 text-xs">
+<p>© 2024 Tribunal de Justicia Administrativa del Estado de Chiapas. Todos los derechos reservados.</p>
+</div>
+</footer>
+</body></html>

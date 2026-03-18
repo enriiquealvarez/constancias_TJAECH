@@ -53,7 +53,7 @@ class AuthController extends Controller
         $this->render('admin/login', [
             'title' => 'Acceso administrativo',
             'csrf' => Csrf::token(),
-        ], 'public');
+        ]);
     }
 
     public function logout()
@@ -108,7 +108,7 @@ class AuthController extends Controller
         $this->render('admin/forgot', [
             'title' => 'Recuperar acceso',
             'csrf' => Csrf::token(),
-        ], 'public');
+        ]);
     }
 
     public function reset()
@@ -151,7 +151,7 @@ class AuthController extends Controller
         $this->render('admin/reset', [
             'title' => 'Restablecer contrasena',
             'csrf' => Csrf::token(),
-        ], 'public');
+        ]);
     }
 
 private function sendResetEmail($user, $token)
