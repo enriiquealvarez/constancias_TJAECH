@@ -1,0 +1,20 @@
+SetEnv MAIL_MODE smtp
+SetEnv MAIL_HOST mail.tjaech.gob.mx
+SetEnv MAIL_PORT 587
+SetEnv MAIL_ENCRYPTION tls
+SetEnv MAIL_USERNAME informatica@tjaech.gob.mx
+SetEnv MAIL_PASSWORD UKvYMPp%wumX
+SetEnv MAIL_FROM_EMAIL informatica@tjaech.gob.mx
+SetEnv MAIL_FROM_NAME "Informatica - Soporte del Area de Informatica"
+SetEnv APP_URL https://constancias.tjaech.gob.mx
+SetEnv MAIL_LOG_PATH /home/tjaechgob/constancias.tjaech.gob.mx/storage/mail.log
+SetEnv MAIL_LOG_ERRORS 1
+
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^public/ - [L]
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+

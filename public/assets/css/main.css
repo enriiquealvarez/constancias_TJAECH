@@ -1,0 +1,833 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Work+Sans:wght@300;400;600&display=swap');
+
+:root {
+    --tja-navy: #111426;
+    --tja-blue: #1B446E;
+    --tja-gold: #C4AF6B;
+    --tja-gold-deep: #AC986A;
+    --tja-gold-light: #F6EAA0;
+    --jh-teal: #009482;
+    --jh-magenta: #C71F69;
+    --jh-magenta-strong: #D8065B;
+    --tja-black: #010101;
+    --tja-light: #f5f6f8;
+    --bs-primary: var(--tja-blue);
+    --bs-primary-rgb: 27, 68, 110;
+    --bs-secondary: var(--tja-gold-deep);
+    --bs-secondary-rgb: 172, 152, 106;
+    --bs-success: var(--jh-teal);
+    --bs-success-rgb: 0, 148, 130;
+    --bs-danger: var(--jh-magenta);
+    --bs-danger-rgb: 199, 31, 105;
+    --bs-warning: var(--tja-gold-light);
+    --bs-warning-rgb: 246, 234, 160;
+    --bs-info: var(--tja-blue);
+    --bs-info-rgb: 27, 68, 110;
+    --bs-dark: var(--tja-navy);
+    --bs-dark-rgb: 17, 20, 38;
+    --bs-body-color: var(--tja-navy);
+    --bs-link-color: var(--tja-blue);
+    --bs-link-hover-color: var(--tja-navy);
+}
+
+html, body {
+    height: 100%;
+}
+
+body.tja-body {
+    font-family: 'Work Sans', 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at 20% 20%, rgba(246, 234, 160, 0.32) 0%, rgba(27, 68, 110, 0.1) 45%, #ffffff 100%);
+    color: var(--tja-navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.tja-topbar {
+    background: linear-gradient(120deg, var(--tja-navy), var(--tja-blue));
+    border-bottom: 1px solid rgba(196, 175, 107, 0.35);
+    padding: 18px 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 10px 24px rgba(17, 20, 38, 0.18);
+}
+
+.tja-title {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #f8fafc;
+}
+
+.tja-subtitle {
+    font-size: 13px;
+    color: rgba(232, 236, 243, 0.75);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.tja-badge {
+    background: var(--tja-gold);
+    color: var(--tja-navy);
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 8px;
+    box-shadow: 0 6px 14px rgba(196, 175, 107, 0.35);
+}
+
+.tja-nav a {
+    color: #f4f6fb;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.tja-nav a:hover {
+    color: var(--tja-gold);
+}
+
+.tja-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.tja-main {
+    padding: 48px 0 80px;
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.tja-hero {
+    padding: 60px 0 40px;
+}
+
+.tja-hero-card {
+    background: linear-gradient(140deg, #ffffff 0%, #f6f8fd 100%);
+    border: 1px solid rgba(27, 68, 110, 0.1);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 18px 40px rgba(27, 68, 110, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+ 
+.tja-hero-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(196, 175, 107, 0.18), transparent 55%);
+    pointer-events: none;
+}
+
+.tja-hero-card h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 34px;
+    margin: 18px 0;
+    color: var(--tja-navy);
+}
+
+.tja-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 148, 130, 0.15);
+    color: var(--jh-teal);
+    border: 1px solid rgba(0, 148, 130, 0.5);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.tja-feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.tja-feature-grid .tja-card {
+    background: linear-gradient(160deg, #ffffff 0%, #f3f6fb 100%);
+    border-left: 4px solid rgba(27, 68, 110, 0.4);
+}
+
+.tja-section {
+    padding: 20px 0 40px;
+}
+
+.tja-auth {
+    position: relative;
+    padding: 70px 0 90px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-height: clamp(520px, 70vh, 760px);
+}
+
+.tja-auth > .container {
+    width: 100%;
+}
+
+.tja-auth::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(196, 175, 107, 0.25), transparent 50%),
+        radial-gradient(circle at 80% 10%, rgba(0, 148, 130, 0.18), transparent 45%);
+    pointer-events: none;
+}
+
+.tja-auth-panel {
+    background: linear-gradient(135deg, rgba(17, 20, 38, 0.92), rgba(27, 68, 110, 0.92));
+    border-radius: 22px;
+    padding: 36px;
+    color: #f8fafc;
+    border: 1px solid rgba(196, 175, 107, 0.35);
+    box-shadow: 0 20px 38px rgba(17, 20, 38, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.tja-auth-panel::after {
+    content: '';
+    position: absolute;
+    right: -40px;
+    bottom: -40px;
+    width: 160px;
+    height: 160px;
+    background: radial-gradient(circle, rgba(196, 175, 107, 0.35), transparent 70%);
+}
+
+.tja-auth-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(196, 175, 107, 0.2);
+    color: var(--tja-gold-light);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+}
+
+.tja-auth-title {
+    font-family: 'Cinzel', serif;
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+
+.tja-auth-text {
+    color: rgba(232, 236, 243, 0.78);
+    margin-bottom: 20px;
+}
+
+.tja-auth-highlights {
+    display: grid;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.tja-auth-highlights i {
+    color: var(--tja-gold);
+    margin-right: 8px;
+}
+
+.tja-auth-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 28px;
+    border: 1px solid rgba(27, 68, 110, 0.12);
+    box-shadow: 0 18px 38px rgba(27, 68, 110, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.tja-auth-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 90% 0%, rgba(196, 175, 107, 0.18), transparent 45%);
+    pointer-events: none;
+}
+
+.tja-auth-card-header h3 {
+    margin-bottom: 6px;
+}
+
+.tja-auth-card-header p {
+    color: rgba(27, 68, 110, 0.7);
+    font-size: 14px;
+}
+
+.tja-auth-card .form-control {
+    background: rgba(27, 68, 110, 0.06);
+    border-color: rgba(27, 68, 110, 0.18);
+}
+
+.tja-auth-link {
+    color: var(--tja-blue);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.tja-auth-link:hover {
+    color: var(--tja-navy);
+    text-decoration: underline;
+}
+
+.tja-btn-lg {
+    padding: 0.65rem 1.1rem;
+    font-size: 15px;
+}
+
+.tja-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(27, 68, 110, 0.1);
+    box-shadow: 0 12px 24px rgba(27, 68, 110, 0.08);
+    border-top: 4px solid rgba(196, 175, 107, 0.5);
+}
+
+.tja-card-border {
+    background: #ffffff;
+    border: 1px solid rgba(27, 68, 110, 0.1);
+    box-shadow: 0 10px 20px rgba(17, 20, 38, 0.08);
+}
+
+.tja-card i {
+    color: var(--tja-navy);
+    font-size: 18px;
+    margin-bottom: 10px;
+    background: rgba(196, 175, 107, 0.25);
+    padding: 8px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tja-btn {
+    background: var(--tja-blue);
+    color: #ffffff;
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    box-shadow: 0 10px 18px rgba(27, 68, 110, 0.2);
+    padding: 0.45rem 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tja-btn:hover {
+    background: var(--tja-navy);
+    color: #ffffff;
+}
+
+.tja-btn-danger {
+    background: var(--jh-magenta);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 8px 14px rgba(199, 31, 105, 0.25);
+}
+
+.tja-btn-danger:hover {
+    background: var(--jh-magenta-strong);
+    color: #ffffff;
+}
+
+.tja-btn-danger.tja-btn-outline {
+    background: rgba(199, 31, 105, 0.12);
+    border-color: rgba(199, 31, 105, 0.5);
+    color: var(--jh-magenta);
+    box-shadow: none;
+}
+
+.tja-btn-danger.tja-btn-outline:hover {
+    background: rgba(216, 6, 91, 0.2);
+    border-color: var(--jh-magenta-strong);
+    color: var(--jh-magenta-strong);
+}
+
+.tja-btn i {
+    color: #ffffff;
+}
+
+.tja-btn i,
+.tja-btn-outline i {
+    font-size: 12px;
+}
+
+.tja-btn-outline i {
+    margin-right: 6px;
+}
+
+.btn-sm i {
+    font-size: 10px;
+}
+
+.tja-table .btn-sm {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 8px;
+}
+
+.tja-action-btn {
+    border-radius: 999px;
+    padding: 0.22rem 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    box-shadow: none;
+    border: 1px solid rgba(27, 68, 110, 0.25);
+    background: rgba(27, 68, 110, 0.06);
+}
+
+.tja-actions {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+}
+
+.tja-table td.text-end {
+    min-width: 180px;
+    padding-right: 28px;
+}
+
+.tja-actions .btn.tja-action-btn {
+    padding: 0.14rem 0.42rem !important;
+    font-size: 0.62rem !important;
+    border-radius: 8px !important;
+    line-height: 1.05;
+    min-width: 70px;
+    min-height: 28px;
+    justify-content: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tja-table .tja-actions .btn.btn-sm {
+    padding: 0.14rem 0.42rem !important;
+    font-size: 0.62rem !important;
+    border-radius: 8px !important;
+}
+
+.tja-actions .tja-action-btn i {
+    font-size: 9px;
+}
+
+.tja-actions-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.tja-user-grid {
+    display: grid;
+    gap: 14px;
+}
+
+.tja-user-card {
+    border: 1px solid rgba(27, 68, 110, 0.12);
+    border-radius: 14px;
+    padding: 14px 16px;
+    background: #ffffff;
+    box-shadow: 0 10px 20px rgba(17, 20, 38, 0.06);
+}
+
+.tja-user-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.tja-user-name {
+    font-weight: 600;
+}
+
+.tja-user-email {
+    font-size: 13px;
+    color: rgba(27, 68, 110, 0.7);
+    word-break: break-all;
+}
+
+.tja-user-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin: 12px 0;
+}
+
+.tja-user-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(27, 68, 110, 0.5);
+}
+
+.tja-user-value {
+    font-size: 13px;
+}
+
+.tja-action-btn:hover {
+    background: rgba(27, 68, 110, 0.1);
+    border-color: rgba(27, 68, 110, 0.45);
+}
+
+.tja-action-btn.tja-btn-danger {
+    background: rgba(199, 31, 105, 0.08);
+    border-color: rgba(199, 31, 105, 0.45);
+    color: var(--jh-magenta);
+}
+
+.tja-action-btn.tja-btn-danger:hover {
+    background: rgba(216, 6, 91, 0.14);
+    border-color: var(--jh-magenta-strong);
+}
+
+.tja-action-btn.tja-btn-qr {
+    background: rgba(0, 148, 130, 0.12);
+    border-color: rgba(0, 148, 130, 0.45);
+    color: #0f6f61;
+}
+
+.tja-action-btn.tja-btn-qr:hover {
+    background: rgba(0, 148, 130, 0.2);
+    border-color: var(--jh-teal);
+}
+
+.tja-action-btn.tja-btn-url {
+    background: rgba(27, 68, 110, 0.12);
+    border-color: rgba(27, 68, 110, 0.45);
+    color: #183552;
+}
+
+.tja-action-btn.tja-btn-url:hover {
+    background: rgba(27, 68, 110, 0.2);
+    border-color: var(--tja-blue);
+}
+
+.tja-action-btn.tja-btn-status {
+    background: rgba(196, 175, 107, 0.18);
+    border-color: rgba(196, 175, 107, 0.6);
+    color: #7c6a2b;
+}
+
+.tja-action-btn.tja-btn-status:hover {
+    background: rgba(196, 175, 107, 0.28);
+    border-color: var(--tja-gold);
+}
+
+.tja-action-btn.tja-btn-edit {
+    background: rgba(17, 20, 38, 0.08);
+    border-color: rgba(17, 20, 38, 0.35);
+    color: #1b2a44;
+}
+
+.tja-action-btn.tja-btn-edit:hover {
+    background: rgba(17, 20, 38, 0.16);
+    border-color: var(--tja-navy);
+}
+
+.tja-action-btn i {
+    font-size: 10px;
+}
+
+.tja-btn-outline {
+    border-color: rgba(27, 68, 110, 0.25);
+    color: var(--tja-navy);
+    background: rgba(27, 68, 110, 0.08);
+    padding: 0.45rem 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tja-btn-outline:hover {
+    border-color: rgba(27, 68, 110, 0.45);
+    color: var(--tja-navy);
+    background: rgba(27, 68, 110, 0.14);
+}
+
+.tja-note {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(27, 68, 110, 0.06);
+    font-size: 13px;
+    color: rgba(27, 68, 110, 0.9);
+}
+
+.tja-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.tja-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(27, 68, 110, 0.6);
+}
+
+.tja-value {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.tja-badge-success {
+    background: rgba(0, 148, 130, 0.12);
+    color: var(--jh-teal);
+    border: 1px solid rgba(0, 148, 130, 0.35);
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+.tja-badge-danger {
+    background: rgba(199, 31, 105, 0.12);
+    color: var(--jh-magenta);
+    border: 1px solid rgba(199, 31, 105, 0.35);
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+.tja-icon-danger {
+    font-size: 28px;
+    color: var(--jh-magenta);
+}
+
+.tja-footer {
+    padding: 30px 0;
+    border-top: 1px solid rgba(196, 175, 107, 0.4);
+    background: linear-gradient(120deg, var(--tja-navy), var(--tja-blue));
+    margin-top: auto;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.tja-footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 15% 30%, rgba(196, 175, 107, 0.2), transparent 55%),
+        radial-gradient(circle at 85% 0%, rgba(0, 148, 130, 0.18), transparent 45%);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.tja-footer .container {
+    position: relative;
+    z-index: 1;
+}
+
+.tja-logo {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+}
+
+.tja-logo-sm {
+    width: 40px;
+    height: 40px;
+}
+
+.tja-footer-title {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    color: #f8fafc;
+}
+
+.tja-footer-subtitle,
+.tja-footer-legend {
+    font-size: 12px;
+    color: rgba(232, 236, 243, 0.75);
+}
+
+.tja-metric {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid rgba(27, 68, 110, 0.1);
+    background: #ffffff;
+    box-shadow: 0 12px 20px rgba(17, 20, 38, 0.08);
+}
+
+.tja-metric-icon {
+    background: rgba(196, 175, 107, 0.2);
+    padding: 12px;
+    border-radius: 12px;
+    color: var(--tja-gold);
+}
+
+.tja-metric-value {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.tja-table {
+    color: var(--tja-navy);
+    margin-bottom: 0;
+}
+
+.tja-table thead {
+    background: rgba(17, 20, 38, 0.06);
+}
+
+.tja-table th, .tja-table td {
+    vertical-align: middle;
+    border-color: rgba(27, 68, 110, 0.12);
+}
+
+.tja-table tbody tr:hover {
+    background: rgba(196, 175, 107, 0.12);
+}
+
+.tja-table-users {
+    table-layout: fixed;
+}
+
+.tja-table-users th,
+.tja-table-users td {
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.tja-table-users th:nth-child(1),
+.tja-table-users td:nth-child(1) {
+    width: 18%;
+}
+
+.tja-table-users th:nth-child(2),
+.tja-table-users td:nth-child(2) {
+    width: 24%;
+}
+
+.tja-table-users th:nth-child(3),
+.tja-table-users td:nth-child(3) {
+    width: 20%;
+}
+
+.tja-table-users th:nth-child(4),
+.tja-table-users td:nth-child(4) {
+    width: 12%;
+}
+
+.tja-table-users th:nth-child(5),
+.tja-table-users td:nth-child(5) {
+    width: 14%;
+}
+
+.tja-table-users th:nth-child(6),
+.tja-table-users td:nth-child(6) {
+    width: 12%;
+}
+
+.tja-search {
+    max-width: 260px;
+}
+
+.tja-checklist {
+    display: grid;
+    gap: 6px;
+    padding: 6px 0;
+}
+
+.form-control,
+.form-select {
+    border-color: rgba(27, 68, 110, 0.18);
+    color: var(--tja-navy);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: rgba(196, 175, 107, 0.6);
+    box-shadow: 0 0 0 0.2rem rgba(196, 175, 107, 0.25);
+}
+
+.tja-table-wrap {
+    border-radius: 14px;
+    overflow: visible;
+    border: 1px solid rgba(27, 68, 110, 0.12);
+}
+
+.tja-loader {
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 18, 35, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.tja-loader-box {
+    background: #ffffff;
+    padding: 18px 22px;
+    border-radius: 14px;
+    border: 1px solid rgba(27, 68, 110, 0.12);
+    box-shadow: 0 12px 30px rgba(27, 68, 110, 0.2);
+    text-align: center;
+    color: var(--tja-navy);
+}
+
+.tja-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #f4f6fb;
+    font-weight: 600;
+}
+
+.tja-user i {
+    font-size: 20px;
+    color: var(--tja-gold);
+}
+
+.tja-logout {
+    background: rgba(196, 175, 107, 0.2);
+    color: var(--tja-gold-light);
+    padding: 6px 12px;
+    border-radius: 999px;
+    text-decoration: none;
+    border: 1px solid rgba(196, 175, 107, 0.4);
+}
+
+.tja-logout:hover {
+    color: #ffffff;
+    background: rgba(196, 175, 107, 0.35);
+}
+
+@media (min-width: 992px) {
+    .tja-feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .tja-topbar .container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .tja-user {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .tja-hero-card {
+        padding: 28px;
+    }
+}
