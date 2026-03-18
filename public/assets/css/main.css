@@ -413,6 +413,7 @@ body.tja-body {
     justify-content: center;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    white-space: nowrap;
 }
 
 .tja-table .tja-actions .btn.btn-sm {
@@ -734,6 +735,16 @@ body.tja-body {
 .tja-table-users th:nth-child(6),
 .tja-table-users td:nth-child(6) {
     width: 12%;
+}
+
+.tja-token-cell {
+    max-width: 120px;
+}
+
+.tja-token-cell code {
+    word-break: break-all;
+    font-size: 0.85em;
+    white-space: normal;
 }
 
 .tja-search {

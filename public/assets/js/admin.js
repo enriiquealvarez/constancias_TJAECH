@@ -270,9 +270,9 @@
                         <td>${r.course_name}</td>
                         <td>${r.doc_type}</td>
                         <td><span class="badge ${badge}">${r.status === 'VERIFIED' ? 'Verificado' : 'No verificado'}</span></td>
-                        <td><code>${r.token}</code></td>
+                        <td class="tja-token-cell"><code>${r.token}</code></td>
                         <td class="text-end">
-                            <div class="tja-actions">
+                            <div class="tja-actions tja-actions-row">
                                 <button class="btn btn-sm tja-btn-outline tja-action-btn tja-btn-qr" data-qr="${r.token}"><i class="fa-solid fa-qrcode"></i> QR</button>
                                 <button class="btn btn-sm tja-btn-outline tja-action-btn tja-btn-url" data-copy="${r.token}"><i class="fa-regular fa-copy"></i> URL</button>
                                 ${manageButtons}
