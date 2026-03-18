@@ -1,0 +1,4 @@
+---
+deployment:
+  tasks:
+    - export /home/$TU_USUARIO_CPANEL/public_html

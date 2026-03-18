@@ -1,0 +1,5 @@
+/tjaechgob_constancias_tja.sql
+/config/database.php
+/storage/*.log
+/storage/mail.log
+/public/error_log
