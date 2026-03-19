@@ -91,10 +91,14 @@
                 </div>
                 <div>
                     <h4 class="font-bold text-lg mb-4 text-white">Contacto</h4>
-                    <ul class="space-y-3 text-slate-400 text-sm">
-                        <li class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">location_on</span>
-                            Tuxtla Gutiérrez, Chiapas
+                    <ul class="space-y-4 text-slate-400 text-sm leading-relaxed">
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-lg mt-0.5 text-institutional-gold">location_on</span>
+                            <span>Boulevard Belisario Domínguez 1713, Colonia Xamaipak.<br>Tuxtla Gutiérrez, Chiapas.</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-lg text-institutional-gold">mail</span>
+                            <a href="mailto:csocial@tjaech.gob.mx" class="hover:text-white hover:underline transition-all">csocial@tjaech.gob.mx</a>
                         </li>
                     </ul>
                 </div>
