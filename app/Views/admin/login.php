@@ -43,14 +43,21 @@
         <!-- Header / Logo Area -->
         <div class="pt-10 pb-6 px-8 flex flex-col items-center">
             <div class="w-full h-24 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-200 mb-6 px-4">
-                <img src="<?php echo base_url('assets/img/logo-tja.png'); ?>" alt="TJAECH" class="h-16 w-auto">
+                <img src="<?php echo base_url('assets/img/logo-tja.png'); ?>" alt="TJAECH" class="h-16 w-auto drop-shadow-sm">
             </div>
-            <h1 class="text-slate-900 text-2xl font-bold tracking-tight text-center">
-                Acceso Administrativo
+            
+            <h1 class="text-primary text-lg sm:text-xl font-black tracking-tight text-center leading-snug mb-3">
+                Sistema de Generación de Constancias<br> 
+                <span class="text-institutional-gold">del TJAECH</span>
             </h1>
-            <p class="text-slate-500 text-sm mt-2 text-center">
-                Ingrese sus credenciales para gestionar el portal
-            </p>
+            
+            <div class="flex items-center gap-3 w-full justify-center">
+                <div class="h-px bg-slate-200 flex-1"></div>
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest text-center">
+                    Acceso Administrativo
+                </p>
+                <div class="h-px bg-slate-200 flex-1"></div>
+            </div>
         </div>
         <!-- Form Area -->
         <div class="px-8 pb-10">
