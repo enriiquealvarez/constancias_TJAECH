@@ -172,7 +172,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- admin.js maintains functionality (fetches, table building). We will adapt it slightly if needed -->
-    <script src="<?php echo base_url('assets/js/admin.js?v=8'); ?>"></script>
+    <script src="<?php echo base_url('assets/js/admin.js?v=' . time()); ?>"></script>
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
