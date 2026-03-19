@@ -256,8 +256,8 @@
             if (!form) return;
             const courses = await fetchJson('/admin/api/courses');
             const participants = await fetchJson('/admin/api/participants');
-            form.course_id.innerHTML = courses.data.map(c => `<option value="${c.id}">${c.name} ${c.edition || ''}</option>`).join('');
-            form.participant_id.innerHTML = participants.data.map(p => `<option value="${p.id}">${p.full_name}</option>`).join('');
+            form.course_id.innerHTML = '<option value="">Seleccione un curso...</option>' + courses.data.map(c => `<option value="${c.id}">${c.name} ${c.edition || ''}</option>`).join('');
+            form.participant_id.innerHTML = '<option value="">Seleccione un participante...</option>' + participants.data.map(p => `<option value="${p.id}">${p.full_name}</option>`).join('');
         };
 
         const load = async (q = '') => {
