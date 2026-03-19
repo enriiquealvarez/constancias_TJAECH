@@ -262,6 +262,17 @@
 
         const load = async (q = '') => {
             const data = await fetchJson('/admin/api/certificates?q=' + encodeURIComponent(q));
+            
+            // Cargar métricas globales
+            fetchJson('/admin/api/metrics').then(metrics => {
+                const totalEl = document.getElementById('stat-total');
+                const verifiedEl = document.getElementById('stat-verified');
+                const pendingEl = document.getElementById('stat-pending');
+                if(totalEl) totalEl.textContent = metrics.total || '0';
+                if(verifiedEl) verifiedEl.textContent = metrics.verified || '0';
+                if(pendingEl) pendingEl.textContent = metrics.not_verified || '0';
+            }).catch(() => {});
+
             table.innerHTML = data.data.map(r => {
                 const isVerified = r.status === 'VERIFIED';
                 const manageButtons = canManage ? `
