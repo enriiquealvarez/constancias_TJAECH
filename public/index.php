@@ -1,5 +1,8 @@
 <?php
 // Front controller
+require_once __DIR__ . '/../app/Core/Env.php';
+\app\Core\Env::load(__DIR__ . '/../.env');
+
 require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../config/database.php';
 

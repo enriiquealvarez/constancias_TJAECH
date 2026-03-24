@@ -26,9 +26,11 @@ class AdminController extends Controller
 
         // Fetch courses from Evaluaciones database
         $pdo = \app\Core\Database::connection();
+        $cfg = $GLOBALS['dbConfig'];
+        $evalDb = $cfg['eval_database'] ?? 'tjaechgob_tjaech_eval';
         $evalCourses = [];
         try {
-            $stmt = $pdo->query("SELECT nombre FROM tjaechgob_tjaech_eval.cursos WHERE activo = 1 ORDER BY id DESC");
+            $stmt = $pdo->query("SELECT nombre FROM `{$evalDb}`.cursos WHERE activo = 1 ORDER BY id DESC");
             $evalCourses = $stmt->fetchAll(\PDO::FETCH_COLUMN);
         } catch (\Throwable $e) {
             error_log('Error fetching eval courses: ' . $e->getMessage());
