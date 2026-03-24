@@ -41,10 +41,15 @@ echo "<h4>Probando Conexión a Base de Datos:</h4>";
 try {
     $dbConfig = require __DIR__ . '/../config/database.php';
     echo "✅ config/database.php cargado.<br>";
+    $host = $dbConfig['host'];
+    $user = $dbConfig['username'];
+    $pass = $dbConfig['password'];
+    $db = $dbConfig['database'];
     
-    $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', $dbConfig['host'], $dbConfig['database']);
-    $pdo = new \PDO($dsn, $dbConfig['username'], $dbConfig['password'], [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    echo "✅ Conexión a Base de Datos EXITOSA.<br>";
+    echo "<h4>Probando con PDO:</h4>";
+    $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', $host, $db);
+    $pdo = new \PDO($dsn, $user, $pass, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    echo "✅ PDO: Conexión EXITOSA.<br>";
     
     $evalDb = $dbConfig['eval_database'] ?? '';
     if ($evalDb) {
@@ -54,6 +59,15 @@ try {
         } catch (\Throwable $e) {
             echo "❌ Error accediendo a Evaluaciones: " . $e->getMessage() . "<br>";
         }
+    }
+
+    echo "<h4>Probando con MySQLi:</h4>";
+    $mysqli = new \mysqli($host, $user, $pass, $db);
+    if ($mysqli->connect_error) {
+        echo "❌ MySQLi: Error (" . $mysqli->connect_errno . ") " . $mysqli->connect_error . "<br>";
+    } else {
+        echo "✅ MySQLi: Conexión EXITOSA.<br>";
+        $mysqli->close();
     }
 } catch (\Throwable $e) {
     echo "❌ Error de Conexión: " . $e->getMessage() . "<br>";
