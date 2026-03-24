@@ -3,7 +3,7 @@ namespace app\Core;
 
 class Mailer
 {
-    public static function send($to, $subject, $html, $text = '')
+    public static function send($to, $subject, $html, $text = '', $attachments = [])
     {
         $cfg = require __DIR__ . '/../../config/mail.php';
         if (($cfg['mode'] ?? 'smtp') === 'log') {
@@ -14,7 +14,7 @@ class Mailer
             return false;
         }
         $smtp = new SmtpClient($cfg);
-        return $smtp->send($to, $subject, $html, $text);
+        return $smtp->send($to, $subject, $html, $text, $attachments);
     }
 
     private static function logMessage($cfg, $to, $subject, $body)
@@ -35,7 +35,7 @@ class SmtpClient
         $this->cfg = $cfg;
     }
 
-    public function send($to, $subject, $html, $text)
+    public function send($to, $subject, $html, $text, $attachments = [])
     {
         $this->connect();
         $this->command('EHLO localhost');
@@ -53,14 +53,42 @@ class SmtpClient
         $this->command('RCPT TO:<' . $to . '>');
         $this->command('DATA');
 
+        $boundary = md5(time() . uniqid());
         $headers = [];
         $headers[] = 'From: ' . $this->cfg['from_name'] . ' <' . $this->cfg['from_email'] . '>';
         $headers[] = 'To: <' . $to . '>';
         $headers[] = 'Subject: ' . $subject;
         $headers[] = 'MIME-Version: 1.0';
-        $headers[] = 'Content-Type: text/html; charset=UTF-8';
 
-        $body = implode("\r\n", $headers) . "\r\n\r\n" . $html . "\r\n.\r\n";
+        if (empty($attachments)) {
+            $headers[] = 'Content-Type: text/html; charset=UTF-8';
+            $headers[] = 'Content-Transfer-Encoding: base64';
+            $body = implode("\r\n", $headers) . "\r\n\r\n" . chunk_split(base64_encode($html));
+        } else {
+            $headers[] = 'Content-Type: multipart/mixed; boundary="' . $boundary . '"';
+            $body = implode("\r\n", $headers) . "\r\n\r\n";
+            $body .= "--" . $boundary . "\r\n";
+            $body .= "Content-Type: text/html; charset=UTF-8\r\n";
+            $body .= "Content-Transfer-Encoding: base64\r\n\r\n";
+            $body .= chunk_split(base64_encode($html)) . "\r\n\r\n";
+
+            foreach ($attachments as $att) {
+                if (!empty($att['path']) && file_exists($att['path'])) {
+                    $content = chunk_split(base64_encode(file_get_contents($att['path'])));
+                    $filename = $att['filename'] ?? basename($att['path']);
+                    $mime = $att['mime'] ?? 'application/octet-stream';
+                    
+                    $body .= "--" . $boundary . "\r\n";
+                    $body .= "Content-Type: " . $mime . "; name=\"" . $filename . "\"\r\n";
+                    $body .= "Content-Transfer-Encoding: base64\r\n";
+                    $body .= "Content-Disposition: attachment; filename=\"" . $filename . "\"\r\n\r\n";
+                    $body .= $content . "\r\n\r\n";
+                }
+            }
+            $body .= "--" . $boundary . "--";
+        }
+        
+        $body .= "\r\n.\r\n";
         $this->write($body);
         $this->expect(250);
         $this->command('QUIT');
@@ -87,10 +115,10 @@ class SmtpClient
         $this->command(base64_encode($this->cfg['password']));
     }
 
-    private function command($cmd)
+    private function command($cmd, $expectedCode = null)
     {
         $this->write($cmd . "\r\n");
-        $this->expect();
+        return $this->expect($expectedCode);
     }
 
     private function write($data)
@@ -107,9 +135,19 @@ class SmtpClient
                 break;
             }
         }
-        if ($code !== null && strpos($response, (string)$code) !== 0) {
+        
+        $statusCode = (int)substr($response, 0, 3);
+        
+        // If a specific code was expected, check it.
+        if ($code !== null && $statusCode !== (int)$code) {
+            throw new \RuntimeException('SMTP error (Expected ' . $code . '): ' . trim($response));
+        }
+        
+        // If no specific code but it's a 4xx or 5xx error, always throw!
+        if ($code === null && $statusCode >= 400) {
             throw new \RuntimeException('SMTP error: ' . trim($response));
         }
+        
         return $response;
     }
 }

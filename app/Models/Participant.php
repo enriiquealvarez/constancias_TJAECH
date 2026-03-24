@@ -45,6 +45,9 @@ class Participant
     public static function delete($id)
     {
         $pdo = Database::connection();
+        $stmtDelCerts = $pdo->prepare('DELETE FROM certificates WHERE participant_id = ?');
+        $stmtDelCerts->execute([$id]);
+        
         $stmt = $pdo->prepare('DELETE FROM participants WHERE id = ?');
         $stmt->execute([$id]);
     }

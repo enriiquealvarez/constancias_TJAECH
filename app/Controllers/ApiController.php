@@ -38,6 +38,12 @@ class ApiController extends Controller
                 $payload = $this->jsonPayload();
                 $this->csrfGuard($payload);
                 $this->validateCourse($payload);
+                $bg = $this->processBackgroundImage($payload, 'background_image');
+                if ($bg) $payload['background_image'] = $bg;
+                
+                $speakBg = $this->processBackgroundImage($payload, 'speaker_background_image');
+                if ($speakBg) $payload['speaker_background_image'] = $speakBg;
+                
                 $id = Course::create($payload);
                 AuditLog::add($_SESSION['user']['id'], 'CREATE', 'courses', $id);
                 $this->json(['ok' => true, 'id' => $id]);
@@ -51,6 +57,12 @@ class ApiController extends Controller
                 $payload = $this->jsonPayload();
                 $this->csrfGuard($payload);
                 $this->validateCourse($payload);
+                $bg = $this->processBackgroundImage($payload, 'background_image');
+                if ($bg) $payload['background_image'] = $bg;
+                
+                $speakBg = $this->processBackgroundImage($payload, 'speaker_background_image');
+                if ($speakBg) $payload['speaker_background_image'] = $speakBg;
+                
                 Course::update($id, $payload);
                 AuditLog::add($_SESSION['user']['id'], 'UPDATE', 'courses', $id);
                 $this->json(['ok' => true]);
@@ -166,6 +178,53 @@ class ApiController extends Controller
         if ($path === '/certificates/export' && $method === 'GET') {
             $this->requireCapability('manage_certificates');
             $this->exportCsv();
+            return;
+        }
+
+        if (preg_match('#^/certificates/download/([a-zA-Z0-9_-]+)$#', $path, $m) && $method === 'GET') {
+            $this->requireCapability('manage_certificates');
+            $token = $m[1];
+            
+            $record = Certificate::findByToken($token);
+            if (!$record) {
+                $this->json(['ok' => false, 'message' => 'Constancia no encontrada.'], 404);
+                return;
+            }
+            
+            $pdo = Database::connection();
+            $stmt = $pdo->prepare("SELECT background_image, speaker_background_image, cert_date FROM courses WHERE id = ?");
+            $stmt->execute([$record['course_id']]);
+            $courseData = $stmt->fetch(\PDO::FETCH_ASSOC);
+            
+            $bg = strtolower($record['doc_type']) === 'reconocimiento' ? ($courseData['speaker_background_image'] ?? $courseData['background_image']) : $courseData['background_image'];
+            $certDate = $courseData['cert_date'] ?? null;
+            $link = base_url('/c/' . $token);
+            
+            try {
+                $pdfPath = \app\Core\CertificateGenerator::generate([
+                    'name' => $record['full_name'],
+                    'course' => $record['course_name'],
+                    'token' => $token,
+                    'url' => $link,
+                    'background' => $bg ?: null,
+                    'cert_date' => $certDate
+                ]);
+                
+                if (file_exists($pdfPath)) {
+                    header('Content-Type: application/pdf');
+                    header('Content-Disposition: inline; filename="' . strtolower($record['doc_type']) . '_' . $token . '.pdf"');
+                    header('Content-Length: ' . filesize($pdfPath));
+                    readfile($pdfPath);
+                    @unlink($pdfPath); // Clean up temp file
+                    exit;
+                } else {
+                    $this->json(['ok' => false, 'message' => 'Error al generar el PDF.'], 500);
+                }
+            } catch (\Throwable $e) {
+                error_log('Error generating PDF on download: ' . $e->getMessage());
+                $this->json(['ok' => false, 'message' => 'Error interno al generar el PDF.'], 500);
+            }
+            return;
         }
 
         if ($path === '/audit' && $method === 'GET') {
@@ -298,6 +357,27 @@ class ApiController extends Controller
         if (empty(trim($payload['name'] ?? ''))) {
             $this->json(['ok' => false, 'message' => 'El nombre del curso es obligatorio.'], 422);
         }
+    }
+
+    private function processBackgroundImage($payload, $key = 'background_image')
+    {
+        if (empty($payload[$key])) {
+            return null;
+        }
+        if (preg_match('/^data:image\/(\w+);base64,/', $payload[$key], $type)) {
+            $data = substr($payload[$key], strpos($payload[$key], ',') + 1);
+            $type = strtolower($type[1]);
+            if (!in_array($type, ['jpg', 'jpeg', 'png'])) return null;
+            $data = base64_decode($data);
+            if ($data === false) return null;
+            $dir = __DIR__ . '/../../public/assets/certificates/';
+            if (!is_dir($dir)) mkdir($dir, 0777, true);
+            $filename = uniqid('bg_') . '.' . $type;
+            if (file_put_contents($dir . $filename, $data)) {
+                return $filename;
+            }
+        }
+        return null;
     }
 
     private function validateParticipant($payload)

@@ -23,10 +23,22 @@ class AdminController extends Controller
             $this->render('admin/forbidden', ['title' => 'Acceso restringido'], 'admin');
             return;
         }
+
+        // Fetch courses from Evaluaciones database
+        $pdo = \app\Core\Database::connection();
+        $evalCourses = [];
+        try {
+            $stmt = $pdo->query("SELECT nombre FROM tjaechgob_tjaech_eval.cursos WHERE activo = 1 ORDER BY id DESC");
+            $evalCourses = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+        } catch (\Throwable $e) {
+            error_log('Error fetching eval courses: ' . $e->getMessage());
+        }
+
         $this->render('admin/courses', [
             'title' => 'Cursos',
             'csrf' => Csrf::token(),
             'can_manage' => Auth::can('manage_courses'),
+            'eval_courses' => $evalCourses
         ], 'admin');
     }
 

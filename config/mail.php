@@ -14,15 +14,15 @@ $boolEnv = static function ($key, $default = false) {
 };
 
 return [
-    'mode' => $env('MAIL_MODE', 'log'),
-    'host' => $env('MAIL_HOST', 'mail.tjaech.gob.mx'),
-    'port' => (int)$env('MAIL_PORT', 465),
-    'encryption' => $env('MAIL_ENCRYPTION', 'ssl'),
-    'username' => $env('MAIL_USERNAME', 'informatica@tjaech.gob.mx'),
-    'password' => $env('MAIL_PASSWORD', ''),
-    'from_email' => $env('MAIL_FROM_EMAIL', 'informatica@tjaech.gob.mx'),
-    'from_name' => $env('MAIL_FROM_NAME', 'Informatica - Soporte del Area de Informatica'),
-    'app_url' => $env('APP_URL', 'http://localhost/constanciasTJAECH'),
-    'log_path' => $env('MAIL_LOG_PATH', __DIR__ . '/../storage/mail.log'),
-    'log_errors' => $boolEnv('MAIL_LOG_ERRORS', false),
+    'mode' => 'smtp',
+    'host' => 'mail.tjaech.gob.mx',
+    'port' => 465,
+    'encryption' => 'ssl',
+    'username' => 'informatica@tjaech.gob.mx',
+    'password' => 'UKvYMPp%wumX',
+    'from_email' => 'informatica@tjaech.gob.mx',
+    'from_name' => 'TJAECH Constancias Oficiales',
+    'app_url' => 'http://localhost/constanciasTJAECH',
+    'log_path' => __DIR__ . '/../storage/mail.log',
+    'log_errors' => true,
 ];

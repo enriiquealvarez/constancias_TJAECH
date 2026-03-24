@@ -26,6 +26,7 @@
                         <select name="type" class="w-full h-11 px-4 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors text-slate-600">
                             <option value="INTERNAL">Interno (Personal del TJAECH)</option>
                             <option value="EXTERNAL">Externo</option>
+                            <option value="PONENTE">Ponente</option>
                         </select>
                     </div>
                     <div class="pt-4 flex items-center gap-3">

@@ -78,7 +78,7 @@
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-5 py-4 text-sm font-semibold text-primary">${r.name}</td>
                     <td class="px-5 py-4 text-sm text-slate-600">${r.edition || ''}</td>
-                    <td class="px-5 py-4 text-sm text-slate-600">${r.start_date || ''} ${r.end_date ? ' - ' + r.end_date : ''}</td>
+                    <td class="px-5 py-4 text-sm text-slate-600">${r.cert_date || 'No definida'}</td>
                     <td class="px-5 py-4 text-sm text-slate-600">${r.modality || ''}</td>
                     <td class="px-5 py-4 text-right">
                         ${canManage ? `<div class="flex justify-end gap-2">
@@ -99,8 +99,31 @@
         }
 
         if (form) {
+            const readFileAsBase64 = (file) => new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(file);
+            });
+
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                
+                const bgInput = document.getElementById('bgImageInput');
+                const bgBase64 = document.getElementById('bgImageBase64');
+                if (bgInput && bgInput.files.length > 0) {
+                    bgBase64.value = await readFileAsBase64(bgInput.files[0]);
+                } else if (bgBase64) {
+                    bgBase64.value = '';
+                }
+
+                const speakerBgInput = document.getElementById('speakerBgImageInput');
+                const speakerBgBase64 = document.getElementById('speakerBgImageBase64');
+                if (speakerBgInput && speakerBgInput.files.length > 0) {
+                    speakerBgBase64.value = await readFileAsBase64(speakerBgInput.files[0]);
+                } else if (speakerBgBase64) {
+                    speakerBgBase64.value = '';
+                }
+
                 const payload = Object.fromEntries(new FormData(form).entries());
                 payload.csrf = csrf;
                 const id = payload.id;
@@ -131,8 +154,7 @@
                 form.id.value = row.id;
                 form.name.value = row.name;
                 form.edition.value = row.edition || '';
-                form.start_date.value = row.start_date || '';
-                form.end_date.value = row.end_date || '';
+                form.cert_date.value = row.cert_date || '';
                 form.modality.value = row.modality || '';
                 form.area.value = row.area || '';
             }
@@ -171,7 +193,7 @@
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-5 py-4 text-sm font-semibold text-primary">${r.full_name}</td>
                     <td class="px-5 py-4 text-sm text-slate-600">${r.email || ''}</td>
-                    <td class="px-5 py-4"><span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 uppercase">${r.type === 'EXTERNAL' ? 'Externo' : 'Interno'}</span></td>
+                    <td class="px-5 py-4"><span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 uppercase">${r.type === 'PONENTE' ? 'Ponente' : (r.type === 'EXTERNAL' ? 'Externo' : 'Interno')}</span></td>
                     <td class="px-5 py-4 text-right">
                         ${canManage ? `<div class="flex justify-end gap-2">
                             <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all tja-action-btn" data-edit="${r.id}" title="Editar"><span class="material-symbols-outlined text-[18px] pointer-events-none">edit</span></button>
@@ -298,6 +320,7 @@
                             <div class="flex justify-end gap-2">
                                 <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all" data-qr="${r.token}" title="Ver QR"><span class="material-symbols-outlined text-[18px]">qr_code_2</span></button>
                                 <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all" data-copy="${r.token}" title="Copiar URL"><span class="material-symbols-outlined text-[18px]">link</span></button>
+                                <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all" data-download="${r.token}" title="Descargar PDF"><span class="material-symbols-outlined text-[18px]">download</span></button>
                                 ${manageButtons}
                             </div>
                         </td>
@@ -347,6 +370,12 @@
             const copy = btn.getAttribute('data-copy');
             const del = btn.getAttribute('data-del');
             const qr = btn.getAttribute('data-qr');
+            const download = btn.getAttribute('data-download');
+
+            if (download) {
+                window.open(base + 'admin/api/certificates/download/' + download, '_blank');
+                return;
+            }
 
             if (qr) {
                 const url = base + 'c/' + qr;

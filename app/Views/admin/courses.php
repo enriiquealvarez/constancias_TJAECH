@@ -14,22 +14,22 @@
                 <form id="courseForm" class="space-y-5">
                     <input type="hidden" name="id">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Nombre del Programa</label>
-                        <input type="text" name="name" required class="w-full h-11 px-4 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors placeholder-slate-300" placeholder="Ej. Taller de Responsabilidades">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Nombre del Curso</label>
+                        <select name="name" required class="w-full h-11 px-4 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors text-slate-600">
+                            <option value="">Seleccione el Programa desde Evaluaciones...</option>
+                            <?php foreach ($eval_courses ?? [] as $cName): ?>
+                                <option value="<?php echo htmlspecialchars($cName); ?>"><?php echo htmlspecialchars($cName); ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Edición</label>
                         <input type="text" name="edition" class="w-full h-11 px-4 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors" placeholder="Ej. 1ra. Edición 2026">
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Fecha Inicio</label>
-                            <input type="date" name="start_date" class="w-full h-11 px-3 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors text-slate-600">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Fecha Fin</label>
-                            <input type="date" name="end_date" class="w-full h-11 px-3 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors text-slate-600">
-                        </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Fecha de la Constancia</label>
+                        <input type="date" name="cert_date" required class="w-full h-11 px-3 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors text-slate-600">
+                        <p class="text-[10px] text-slate-400 pl-1 mt-1 font-medium">Esta es la fecha oficial que aparecerá grabada en los PDFs generados.</p>
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Modalidad</label>
@@ -43,6 +43,16 @@
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Área Organizadora</label>
                         <input type="text" name="area" class="w-full h-11 px-4 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors placeholder-slate-300" placeholder="Ej. Instituto de Formación">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Plantilla de Constancia (JPG/PNG)</label>
+                        <input type="file" id="bgImageInput" accept="image/jpeg, image/png" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors">
+                        <input type="hidden" name="background_image" id="bgImageBase64">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Plantilla de Reconocimiento Ponente (JPG/PNG)</label>
+                        <input type="file" id="speakerBgImageInput" accept="image/jpeg, image/png" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors">
+                        <input type="hidden" name="speaker_background_image" id="speakerBgImageBase64">
                     </div>
                     <div class="pt-4 flex items-center gap-3">
                         <button type="submit" class="flex-1 bg-primary hover:bg-primary/95 text-white font-bold py-3 px-4 rounded-lg shadow-[0_4px_14px_0_rgba(27,69,111,0.39)] hover:shadow-[0_6px_20px_rgba(27,69,111,0.23)] hover:-translate-y-0.5 transition-all text-[11px] uppercase tracking-widest flex items-center justify-center gap-2">
@@ -81,7 +91,7 @@
                         <tr class="bg-slate-50 border-b border-slate-200">
                             <th class="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Programa</th>
                             <th class="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Edición</th>
-                            <th class="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Periodo</th>
+                            <th class="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Fecha Constancia</th>
                             <th class="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Modalidad</th>
                             <th class="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-right">Opciones</th>
                         </tr>

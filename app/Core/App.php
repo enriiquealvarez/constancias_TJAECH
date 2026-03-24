@@ -52,6 +52,11 @@ class App
             return;
         }
 
+        if ($uri === '/api/webhook/issue-certificate') {
+            (new \app\Controllers\WebhookController())->handle();
+            return;
+        }
+
         if (strpos($uri, '/admin/api') === 0) {
             (new \app\Controllers\ApiController())->handle($uri);
             return;

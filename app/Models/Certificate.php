@@ -8,12 +8,10 @@ class Certificate
     public static function metrics()
     {
         $pdo = Database::connection();
-        $total = $pdo->query('SELECT COUNT(*) AS c FROM certificates')->fetch()['c'] ?? 0;
-        $verified = $pdo->prepare("SELECT COUNT(*) AS c FROM certificates WHERE status = 'VERIFIED'");
-        $verified->execute();
+        $total = $pdo->query('SELECT COUNT(c.id) AS c FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id')->fetch()['c'] ?? 0;
+        $verified = $pdo->query("SELECT COUNT(c.id) AS c FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id WHERE c.status = 'VERIFIED'");
         $verifiedCount = $verified->fetch()['c'] ?? 0;
-        $not = $pdo->prepare("SELECT COUNT(*) AS c FROM certificates WHERE status = 'NOT_VERIFIED'");
-        $not->execute();
+        $not = $pdo->query("SELECT COUNT(c.id) AS c FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id WHERE c.status = 'NOT_VERIFIED'");
         $notCount = $not->fetch()['c'] ?? 0;
         return [
             'ok' => true,
