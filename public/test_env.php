@@ -31,6 +31,19 @@ if (file_exists($appCoreFile)) {
     echo "❌ Archivo App.php no encontrado en: $appCoreFile <br>";
 }
 
+$vendorFile = __DIR__ . '/../vendor/autoload.php';
+if (file_exists($vendorFile)) {
+    echo "✅ Archivo vendor/autoload.php ENCONTRADO.<br>";
+    require_once $vendorFile;
+    if (class_exists('TCPDF')) {
+        echo "✅ Clase TCPDF cargada exitosamente.<br>";
+    } else {
+        echo "❌ Clase TCPDF NO ENCONTRADA. Revisa vendor/tecnickcom.<br>";
+    }
+} else {
+    echo "❌ Archivo vendor/autoload.php NO ENCONTRADO en: $vendorFile <br>";
+}
+
 $dotEnvPath = __DIR__ . '/../.env';
 if (file_exists($dotEnvPath)) {
     echo "✅ Archivo .env encontrado.<br>";
