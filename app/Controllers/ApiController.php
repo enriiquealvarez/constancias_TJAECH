@@ -222,7 +222,7 @@ class ApiController extends Controller
                 }
             } catch (\Throwable $e) {
                 error_log('Error generating PDF on download: ' . $e->getMessage());
-                $this->json(['ok' => false, 'message' => 'Error interno al generar el PDF: ' . $e->getMessage()], 500);
+                $this->json(['ok' => false, 'message' => 'Error interno al generar el PDF.'], 500);
             }
             return;
         }
