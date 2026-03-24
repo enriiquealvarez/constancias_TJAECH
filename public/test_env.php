@@ -39,36 +39,24 @@ if (strlen($pass) > 0) {
 
 echo "<h4>Probando Conexión a Base de Datos:</h4>";
 try {
-    $dbConfig = require __DIR__ . '/../config/database.php';
-    echo "✅ config/database.php cargado.<br>";
-    $host = $dbConfig['host'];
-    $user = $dbConfig['username'];
-    $pass = $dbConfig['password'];
-    $db = $dbConfig['database'];
-    
-    echo "<h4>Probando con PDO:</h4>";
-    $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', $host, $db);
-    $pdo = new \PDO($dsn, $user, $pass, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    echo "✅ PDO: Conexión EXITOSA.<br>";
-    
-    $evalDb = $dbConfig['eval_database'] ?? '';
-    if ($evalDb) {
+    echo "<h4>3. Verificando Webhook (Seguridad):</h4>";
+    $webhookSecret = \app\Core\Env::get('WEBHOOK_SECRET') ? 'CONFIGURADO ✅' : 'NO CONFIGURADO ❌';
+    echo "WEBHOOK_SECRET: $webhookSecret <br>";
+
+    echo "<h4>4. Prueba de Correo:</h4>";
+    if (isset($_GET['test_mail'])) {
         try {
-            $pdo->query("SELECT 1 FROM `{$evalDb}`.cursos LIMIT 1");
-            echo "✅ Acceso a base de datos de Evaluaciones EXITOSA.<br>";
+            require_once __DIR__ . '/../app/Core/Mailer.php';
+            $testEmail = $_GET['test_mail'];
+            \app\Core\Mailer::send($testEmail, "Prueba de Constancias", "<h1>Prueba Exitosa</h1><p>Si recibes esto, el SMTP en producción funciona.</p>", "Prueba Exitosa");
+            echo "✅ Correo de prueba enviado a $testEmail. Revisa tu bandeja de entrada.";
         } catch (\Throwable $e) {
-            echo "❌ Error accediendo a Evaluaciones: " . $e->getMessage() . "<br>";
+            echo "❌ Error enviando correo: " . $e->getMessage();
         }
+    } else {
+        echo "<a href='?test_mail=tu_correo@ejemplo.com' style='padding: 10px; background: #1b3f66; color: white; text-decoration: none; border-radius: 5px;'>Probar Envío de Correo</a> (Cambia el correo en la URL)<br>";
     }
 
-    echo "<h4>Probando con MySQLi:</h4>";
-    $mysqli = new \mysqli($host, $user, $pass, $db);
-    if ($mysqli->connect_error) {
-        echo "❌ MySQLi: Error (" . $mysqli->connect_errno . ") " . $mysqli->connect_error . "<br>";
-    } else {
-        echo "✅ MySQLi: Conexión EXITOSA.<br>";
-        $mysqli->close();
-    }
 } catch (\Throwable $e) {
-    echo "❌ Error de Conexión: " . $e->getMessage() . "<br>";
+    echo "❌ Error en diagnóstico: " . $e->getMessage() . "<br>";
 }

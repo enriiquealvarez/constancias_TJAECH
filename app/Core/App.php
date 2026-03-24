@@ -52,7 +52,7 @@ class App
             return;
         }
 
-        if ($uri === '/api/webhook/issue-certificate') {
+        if ($uri === '/api/webhook/issue-certificate' || $uri === '/webhook') {
             (new \app\Controllers\WebhookController())->handle();
             return;
         }
