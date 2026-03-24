@@ -30,6 +30,12 @@ echo "<h4>Verificando Variables de Entorno:</h4>";
 echo "DB_HOST: " . (\app\Core\Env::get('DB_HOST') ?: 'NO DEFINIDO') . "<br>";
 echo "DB_DATABASE: " . (\app\Core\Env::get('DB_DATABASE') ?: 'NO DEFINIDO') . "<br>";
 echo "DB_USERNAME: " . (\app\Core\Env::get('DB_USERNAME') ?: 'NO DEFINIDO') . "<br>";
+$pass = \app\Core\Env::get('DB_PASSWORD') ?: '';
+echo "DB_PASSWORD_LENGTH: " . strlen($pass) . "<br>";
+if (strlen($pass) > 0) {
+    echo "DB_PASSWORD_START: " . $pass[0] . "<br>";
+    echo "DB_PASSWORD_END: " . substr($pass, -1) . "<br>";
+}
 
 echo "<h4>Probando Conexión a Base de Datos:</h4>";
 try {
