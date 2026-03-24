@@ -13,6 +13,24 @@ if (file_exists($envPath)) {
     exit;
 }
 
+echo "<h4>Tracing de Ruta:</h4>";
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+echo "REQUEST_URI: " . $_SERVER['REQUEST_URI'] . "<br>";
+echo "Ruta parseada (Path): $uri <br>";
+echo "DOCUMENT_ROOT: " . $_SERVER['DOCUMENT_ROOT'] . "<br>";
+
+$appCoreFile = __DIR__ . '/../app/Core/App.php';
+if (file_exists($appCoreFile)) {
+    $content = file_get_contents($appCoreFile);
+    if (strpos($content, "'/webhook'") !== false) {
+        echo "✅ Código de ruta '/webhook' ENCONTRADO en App.php.<br>";
+    } else {
+        echo "❌ Código de ruta '/webhook' NO ENCONTRADO en App.php. El git push no surtió efecto.<br>";
+    }
+} else {
+    echo "❌ Archivo App.php no encontrado en: $appCoreFile <br>";
+}
+
 $dotEnvPath = __DIR__ . '/../.env';
 if (file_exists($dotEnvPath)) {
     echo "✅ Archivo .env encontrado.<br>";
