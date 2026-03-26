@@ -298,13 +298,18 @@
 
             table.innerHTML = data.data.map(r => {
                 const isVerified = r.status === 'VERIFIED';
-                const isPending = r.status === 'PENDING_REVIEW' || r.status === 'NOT_VERIFIED';
-                const manageButtons = canManage ? `
-                    ${isPending ? `<button class="p-1.5 hover:bg-green-50 rounded-md text-green-600 transition-all" data-approve="${r.id}" title="Aprobar y Enviar"><span class="material-symbols-outlined text-[18px]">verified</span></button>` : ''}
+                const isPendingReview = r.status === 'PENDING_REVIEW';
+                
+                const actionButtons = canManage ? `
                     <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-blue-600 transition-all font-bold" data-edit-participant="${r.participant_id}" data-name="${r.full_name}" data-email="${r.email || ''}" data-course-id="${r.course_id}" data-course-name="${r.course_name}" title="Corregir datos de constancia"><span class="material-symbols-outlined text-[18px]">edit_note</span></button>
-                    <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-blue-600 transition-all" data-status="${r.id}" data-current="${r.status}" title="Cambiar estado"><span class="material-symbols-outlined text-[18px]">sync_alt</span></button>
+                    ${isVerified ? `
+                        <button class="p-1.5 hover:bg-success/10 rounded-md text-success transition-all tja-btn-approve" data-approve="${r.id}" title="Enviar Correo de Constancia"><span class="material-symbols-outlined text-[18px]">mark_email_read</span></button>
+                    ` : `
+                        <button class="p-1.5 opacity-30 cursor-not-allowed rounded-md text-slate-400" title="Verifica primero para enviar correo"><span class="material-symbols-outlined text-[18px]">mark_email_read</span></button>
+                    `}
                     <button class="p-1.5 hover:bg-red-50 rounded-md text-slate-400 hover:text-red-500 transition-all" data-del="${r.id}" title="Eliminar"><span class="material-symbols-outlined text-[18px]">delete</span></button>
                 ` : '';
+
                 return `
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-5 py-4">
@@ -315,10 +320,11 @@
                             <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 uppercase">${r.doc_type}</span>
                         </td>
                         <td class="px-5 py-4">
-                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold ${isVerified ? 'text-success bg-success/10' : (r.status === 'PENDING_REVIEW' ? 'text-orange-600 bg-orange-100 border border-orange-200' : 'text-slate-600 bg-slate-100')} px-2 py-1 rounded-full uppercase">
-                                <span class="w-1.5 h-1.5 rounded-full ${isVerified ? 'bg-success' : (r.status === 'PENDING_REVIEW' ? 'bg-orange-600' : 'bg-slate-400')}"></span> 
-                                ${isVerified ? 'Verificado' : (r.status === 'PENDING_REVIEW' ? 'Por Revisar' : 'Pendiente')}
-                            </span>
+                            <label class="tja-switch ${!canManage ? 'pointer-events-none opacity-70' : ''}" title="${isVerified ? 'Click para marcar como Pendiente' : 'Click para marcar como Verificado'}">
+                                <input type="checkbox" class="tja-switch-input" data-toggle-status="${r.id}" ${isVerified ? 'checked' : ''}>
+                                <span class="tja-switch-slider"></span>
+                                <span class="tja-switch-label">${isVerified ? 'Verificado' : (isPendingReview ? 'Por Revisar' : 'Pendiente')}</span>
+                            </label>
                         </td>
                         <td class="px-5 py-4 font-mono text-xs text-slate-500 bg-slate-50/50 rounded pointer-events-auto selection:bg-corporate-blue selection:text-white">${r.token}</td>
                         <td class="px-5 py-4 text-right">
@@ -326,8 +332,7 @@
                                 <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all" data-qr="${r.token}" title="Ver QR"><span class="material-symbols-outlined text-[18px]">qr_code_2</span></button>
                                 <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all" data-copy="${r.token}" title="Copiar URL"><span class="material-symbols-outlined text-[18px]">link</span></button>
                                 <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all" data-download="${r.token}" title="Descargar PDF"><span class="material-symbols-outlined text-[18px]">download</span></button>
-                                ${r.status === 'PENDING_REVIEW' ? `<button class="p-1.5 hover:bg-success/10 rounded-md text-success hover:text-success transition-all tja-btn-approve" data-approve="${r.id}" title="Aprobar y Enviar Correo"><span class="material-symbols-outlined text-[18px]">mark_email_read</span></button>` : ''}
-                                ${manageButtons}
+                                ${actionButtons}
                             </div>
                         </td>
                     </tr>
@@ -544,6 +549,20 @@
                 const url = base + 'c/' + copy;
                 await navigator.clipboard.writeText(url);
                 Swal.fire({ icon: 'success', title: 'URL copiada', timer: 1200, showConfirmButton: false });
+                return;
+            }
+
+            const toggleId = e.target.closest('.tja-switch-input')?.getAttribute('data-toggle-status');
+            if (toggleId && canManage) {
+                const isChecked = e.target.closest('.tja-switch-input').checked;
+                const next = isChecked ? 'VERIFIED' : 'NOT_VERIFIED';
+                try {
+                    await fetchJson(`/admin/api/certificates/status/${toggleId}`, { method: 'POST', body: { csrf, status: next } });
+                    load(search.value);
+                } catch (err) {
+                    Swal.fire({ icon: 'error', title: 'Error', text: err.message });
+                }
+                return;
             }
 
             if (status && canManage) {

@@ -842,3 +842,59 @@ body.tja-body {
         padding: 28px;
     }
 }
+
+/* Custom Switch for Certificate Status */
+.tja-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    gap: 8px;
+}
+
+.tja-switch-input {
+    display: none;
+}
+
+.tja-switch-slider {
+    position: relative;
+    width: 32px;
+    height: 18px;
+    background-color: #cbd5e1;
+    border-radius: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tja-switch-slider::before {
+    content: "";
+    position: absolute;
+    height: 14px;
+    width: 14px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tja-switch-input:checked + .tja-switch-slider {
+    background-color: var(--jh-teal);
+}
+
+.tja-switch-input:checked + .tja-switch-slider::before {
+    transform: translateX(14px);
+}
+
+.tja-switch-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    transition: color 0.3s;
+}
+
+.tja-switch-input:checked ~ .tja-switch-label {
+    color: var(--jh-teal);
+}
