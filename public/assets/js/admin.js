@@ -297,8 +297,9 @@
             }).catch(() => {});
 
             table.innerHTML = data.data.map(r => {
-                const isVerified = r.status === 'VERIFIED';
+                const isPending = r.status === 'PENDING_REVIEW';
                 const manageButtons = canManage ? `
+                    ${isPending ? `<button class="p-1.5 hover:bg-green-50 rounded-md text-green-600 transition-all" data-approve="${r.id}" title="Aprobar y Enviar"><span class="material-symbols-outlined text-[18px]">verified</span></button>` : ''}
                     <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-blue-600 transition-all font-bold" data-edit-participant="${r.participant_id}" data-name="${r.full_name}" data-email="${r.email || ''}" data-course-id="${r.course_id}" data-course-name="${r.course_name}" title="Corregir datos de constancia"><span class="material-symbols-outlined text-[18px]">edit_note</span></button>
                     <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-blue-600 transition-all" data-status="${r.id}" data-current="${r.status}" title="Cambiar estado"><span class="material-symbols-outlined text-[18px]">sync_alt</span></button>
                     <button class="p-1.5 hover:bg-red-50 rounded-md text-slate-400 hover:text-red-500 transition-all" data-del="${r.id}" title="Eliminar"><span class="material-symbols-outlined text-[18px]">delete</span></button>
@@ -376,6 +377,33 @@
             const qr = btn.getAttribute('data-qr');
             const download = btn.getAttribute('data-download');
             const approve = btn.getAttribute('data-approve');
+            const approveId = btn.getAttribute('data-approve');
+            if (approveId) {
+                const result = await Swal.fire({
+                    title: '¿Aprobar y enviar?',
+                    text: 'Se cambiará el estado a VERIFICADO y se enviará el correo al participante.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, aprobar y enviar',
+                    cancelButtonText: 'Cancelar'
+                });
+
+                if (result.isConfirmed) {
+                    try {
+                        const data = await fetchJson(`/admin/api/certificates/approve/${approveId}`, { method: 'POST', body: { csrf } });
+                        if (data.ok) {
+                            Swal.fire({ icon: 'success', title: 'Completado', text: data.message, timer: 2000, showConfirmButton: false });
+                            load(search.value);
+                        } else {
+                            throw new Error(data.message);
+                        }
+                    } catch (err) {
+                        Swal.fire({ icon: 'error', title: 'Error', text: err.message });
+                    }
+                }
+                return;
+            }
+
             const editPartId = btn.getAttribute('data-edit-participant');
 
             if (editPartId) {
