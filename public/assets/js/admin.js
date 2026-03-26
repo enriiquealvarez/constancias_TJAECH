@@ -554,19 +554,29 @@
 
             const switchEl = e.target.closest('.tja-switch');
             if (switchEl && canManage) {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 const input = switchEl.querySelector('input');
+                const label = switchEl.querySelector('.tja-switch-label');
                 const toggleId = input.getAttribute('data-toggle-status');
+                
                 if (toggleId) {
-                    const isChecked = input.checked;
+                    const isChecked = !input.checked;
+                    input.checked = isChecked;
+                    label.textContent = isChecked ? 'Verificado' : 'Pendiente';
+                    
                     const next = isChecked ? 'VERIFIED' : 'NOT_VERIFIED';
                     try {
                         await fetchJson(`/admin/api/certificates/status/${toggleId}`, { method: 'POST', body: { csrf, status: next } });
                         load(search.value);
                     } catch (err) {
+                        input.checked = !isChecked;
+                        label.textContent = !isChecked ? 'Verificado' : 'Pendiente';
                         Swal.fire({ icon: 'error', title: 'Error', text: err.message });
                     }
-                    return;
                 }
+                return;
             }
 
             if (status && canManage) {
