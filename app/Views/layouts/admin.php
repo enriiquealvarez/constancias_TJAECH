@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    <link href="<?php echo base_url('assets/css/main.css?v=13'); ?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/css/main.css?v=' . time()); ?>" rel="stylesheet">
     <meta name="csrf-token" content="<?php echo htmlspecialchars($csrf ?? ''); ?>">
     <script id="tailwind-config">
         tailwind.config = {

@@ -563,17 +563,25 @@
                 
                 if (toggleId) {
                     const isChecked = !input.checked;
+                    const next = isChecked ? 'VERIFIED' : 'NOT_VERIFIED';
+                    const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+                    // Optimistic UI update
                     input.checked = isChecked;
                     label.textContent = isChecked ? 'Verificado' : 'Pendiente';
                     
-                    const next = isChecked ? 'VERIFIED' : 'NOT_VERIFIED';
                     try {
-                        await fetchJson(`/admin/api/certificates/status/${toggleId}`, { method: 'POST', body: { csrf, status: next } });
+                        const res = await fetchJson(`/admin/api/certificates/status/${toggleId}`, { 
+                            method: 'POST', 
+                            body: { csrf, status: next } 
+                        });
+                        if (!res.ok) throw new Error(res.message);
                         load(search.value);
                     } catch (err) {
+                        // Revert on error
                         input.checked = !isChecked;
                         label.textContent = !isChecked ? 'Verificado' : 'Pendiente';
-                        Swal.fire({ icon: 'error', title: 'Error', text: err.message });
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar: ' + err.message });
                     }
                 }
                 return;
