@@ -27,7 +27,7 @@ class Certificate
     public static function findByToken($token)
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('SELECT c.*, p.full_name, crs.name AS course_name, crs.edition FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id WHERE c.token = ? LIMIT 1');
+        $stmt = $pdo->prepare('SELECT c.*, p.full_name, p.email, crs.name AS course_name, crs.edition FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id WHERE c.token = ? LIMIT 1');
         $stmt->execute([$token]);
         return $stmt->fetch();
     }
@@ -36,11 +36,11 @@ class Certificate
     {
         $pdo = Database::connection();
         if ($q) {
-            $stmt = $pdo->prepare("SELECT c.*, p.full_name, crs.name AS course_name FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id WHERE p.full_name LIKE ? OR crs.name LIKE ? OR c.token LIKE ? ORDER BY c.id DESC");
+            $stmt = $pdo->prepare("SELECT c.*, p.full_name, p.email, crs.name AS course_name FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id WHERE p.full_name LIKE ? OR crs.name LIKE ? OR c.token LIKE ? ORDER BY c.id DESC");
             $like = '%' . $q . '%';
             $stmt->execute([$like, $like, $like]);
         } else {
-            $stmt = $pdo->query('SELECT c.*, p.full_name, crs.name AS course_name FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id ORDER BY c.id DESC');
+            $stmt = $pdo->query('SELECT c.*, p.full_name, p.email, crs.name AS course_name FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id ORDER BY c.id DESC');
         }
         return $stmt->fetchAll();
     }

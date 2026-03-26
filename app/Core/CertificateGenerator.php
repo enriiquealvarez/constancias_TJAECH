@@ -46,6 +46,7 @@ class CertificateGenerator
         $pdf->Cell(237, 15, $name, 0, 1, 'C');
 
         // Print paragraph text
+        $pdf->SetFont('helvetica', '', 12);
         $pdf->SetTextColor(20, 20, 20);
         $pdf->SetXY(40, 134);
         $courseName = trim($data['course'] ?? '');
