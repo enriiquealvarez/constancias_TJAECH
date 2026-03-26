@@ -297,6 +297,7 @@
             }).catch(() => {});
 
             table.innerHTML = data.data.map(r => {
+                const isVerified = r.status === 'VERIFIED';
                 const isPending = r.status === 'PENDING_REVIEW';
                 const manageButtons = canManage ? `
                     ${isPending ? `<button class="p-1.5 hover:bg-green-50 rounded-md text-green-600 transition-all" data-approve="${r.id}" title="Aprobar y Enviar"><span class="material-symbols-outlined text-[18px]">verified</span></button>` : ''}
