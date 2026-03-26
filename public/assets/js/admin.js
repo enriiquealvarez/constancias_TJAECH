@@ -297,9 +297,12 @@
             }).catch(() => {});
 
             table.innerHTML = data.data.map(r => {
-                const normalizedStatus = (r.status || '').trim().toUpperCase();
-                const isVerified = normalizedStatus === 'VERIFIED' || normalizedStatus === 'VERIFICADO';
+                const rawStatus = (r.status || '').toString().trim().toUpperCase();
+                const isVerified = rawStatus === 'VERIFIED' || rawStatus === 'VERIFICADO';
                 
+                // Debug console log to investigate persistent UI issues
+                if (rawStatus === '') console.warn('Record ' + r.id + ' has EMPTY status');
+
                 const actionButtons = canManage ? `
                     <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-blue-600 transition-all font-bold" data-edit-participant="${r.participant_id}" data-name="${r.full_name}" data-email="${r.email || ''}" data-course-id="${r.course_id}" data-course-name="${r.course_name}" title="Corregir datos de constancia"><span class="material-symbols-outlined text-[18px]">edit_note</span></button>
                     ${isVerified ? `
@@ -321,7 +324,10 @@
                         </td>
                         <td class="px-5 py-4">
                             <label class="tja-switch ${!canManage ? 'pointer-events-none opacity-70' : ''}" title="${isVerified ? 'Click para marcar como Pendiente' : 'Click para marcar como Verificado'}">
-                                <input type="checkbox" class="tja-switch-input" data-toggle-status="${r.id}" ${isVerified ? 'checked' : ''}>
+                                <input type="checkbox" class="tja-switch-input" 
+                                       data-toggle-status="${r.id}" 
+                                       autocomplete="off"
+                                       ${isVerified ? 'checked' : ''}>
                                 <span class="tja-switch-slider"></span>
                                 <span class="tja-switch-label">${isVerified ? 'Verificado' : 'Pendiente'}</span>
                             </label>
