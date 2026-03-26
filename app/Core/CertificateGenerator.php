@@ -29,12 +29,21 @@ class CertificateGenerator
 
         // (Title Texts: "O T O R G A...", "CONSTANCIA", "A:" are now baked into the background image)
 
-        // Print Text Name
-        $pdf->SetFont('times', 'B', 32);
+        // Dynamic Font Size for name to prevent overflow
+        $name = mb_strtoupper($data['name'] ?? '');
+        $fontSize = 32;
+        $maxWidth = 220; // Slightly less than 237 to leave margins
+        
+        $pdf->SetFont('times', 'B', $fontSize);
+        while ($pdf->GetStringWidth($name) > $maxWidth && $fontSize > 12) {
+            $fontSize--;
+            $pdf->SetFont('times', 'B', $fontSize);
+        }
+
         // RGB Color for name
         $pdf->SetTextColor(60, 60, 60);
         $pdf->SetXY(30, 114);
-        $pdf->Cell(237, 15, mb_strtoupper($data['name'] ?? ''), 0, 1, 'C');
+        $pdf->Cell(237, 15, $name, 0, 1, 'C');
 
         // Print paragraph text
         $pdf->SetFont('helvetica', '', 12);

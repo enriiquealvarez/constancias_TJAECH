@@ -17,12 +17,21 @@
             <p class="text-xl font-bold text-primary tja-metric-value">--</p>
         </div>
     </div>
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4" id="metric-pending-review">
+        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+            <span class="material-symbols-outlined text-blue-600">rate_review</span>
+        </div>
+        <div>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Por Revisar</p>
+            <p class="text-xl font-bold text-primary tja-metric-value">--</p>
+        </div>
+    </div>
     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4" id="metric-not">
         <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
             <span class="material-symbols-outlined text-orange-600">pending_actions</span>
         </div>
         <div>
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pendientes</p>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Inactivas</p>
             <p class="text-xl font-bold text-primary tja-metric-value">--</p>
         </div>
     </div>

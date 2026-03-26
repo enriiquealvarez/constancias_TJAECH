@@ -10,6 +10,7 @@ use app\Models\Participant;
 use app\Models\Certificate;
 use app\Models\AuditLog;
 use app\Models\User;
+use app\Core\NotificationService;
 
 class ApiController extends Controller
 {
@@ -173,6 +174,23 @@ class ApiController extends Controller
             Certificate::setStatus((int)$m[1], $payload['status'] ?? 'NOT_VERIFIED');
             AuditLog::add($_SESSION['user']['id'], 'STATUS', 'certificates', (int)$m[1]);
             $this->json(['ok' => true]);
+        }
+
+        if (preg_match('#^/certificates/approve/(\d+)$#', $path, $m) && $method === 'POST') {
+            $this->requireCapability('manage_certificates');
+            $payload = $this->jsonPayload();
+            $this->csrfGuard($payload);
+            $id = (int)$m[1];
+            
+            Certificate::setStatus($id, 'VERIFIED');
+            $mailError = NotificationService::sendCertificateEmail($id);
+            
+            AuditLog::add($_SESSION['user']['id'], 'APPROVE', 'certificates', $id);
+            $this->json([
+                'ok' => true, 
+                'message' => 'Constancia aprobada y enviada' . ($mailError ? ' PERO EL CORREO FALLÓ: ' . $mailError : ''),
+                'mail_error' => $mailError
+            ]);
         }
 
         if ($path === '/certificates/export' && $method === 'GET') {

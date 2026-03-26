@@ -86,17 +86,18 @@ class WebhookController extends Controller
                     'participant_id' => $participantId,
                     'course_id' => $courseId,
                     'doc_type' => $docType,
-                    'status' => 'VERIFIED'
+                    'status' => 'PENDING_REVIEW'
                 ]);
                 $token = Certificate::getToken($certId);
             }
 
-            // Send Email
-            $mailError = $this->sendEmail($name, $email, $courseName, $docType, $token, $courseId);
+            // Send Email (Skipped for webhook, now requires admin review)
+            // $mailError = $this->sendEmail($name, $email, $courseName, $docType, $token, $courseId);
+            $mailError = null;
 
             $this->json([
                 'ok' => true,
-                'message' => 'Certificado emitido exitosamente' . ($mailError ? ' PERO EL CORREO FALLÓ: ' . $mailError : ''),
+                'message' => 'Certificado registrado para revisión' . ($mailError ? ' PERO EL CORREO FALLÓ: ' . $mailError : ''),
                 'mail_error' => $mailError,
                 'id' => $certId,
                 'token' => $token

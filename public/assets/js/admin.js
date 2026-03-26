@@ -56,6 +56,7 @@
                 .then(data => {
                     document.querySelector('#metric-total .tja-metric-value').textContent = data.total;
                     document.querySelector('#metric-verified .tja-metric-value').textContent = data.verified;
+                    document.querySelector('#metric-pending-review .tja-metric-value').textContent = data.pending_review;
                     document.querySelector('#metric-not .tja-metric-value').textContent = data.not_verified;
                 })
                 .catch(() => {});
@@ -292,12 +293,13 @@
                 const pendingEl = document.getElementById('stat-pending');
                 if(totalEl) totalEl.textContent = metrics.total || '0';
                 if(verifiedEl) verifiedEl.textContent = metrics.verified || '0';
-                if(pendingEl) pendingEl.textContent = metrics.not_verified || '0';
+                if(pendingEl) pendingEl.textContent = (metrics.not_verified + metrics.pending_review) || '0';
             }).catch(() => {});
 
             table.innerHTML = data.data.map(r => {
                 const isVerified = r.status === 'VERIFIED';
                 const manageButtons = canManage ? `
+                    <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-blue-600 transition-all font-bold" data-edit-participant="${r.participant_id}" data-name="${r.full_name}" data-email="${r.email || ''}" title="Corregir nombre/correo"><span class="material-symbols-outlined text-[18px]">edit_note</span></button>
                     <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-blue-600 transition-all" data-status="${r.id}" data-current="${r.status}" title="Cambiar estado"><span class="material-symbols-outlined text-[18px]">sync_alt</span></button>
                     <button class="p-1.5 hover:bg-red-50 rounded-md text-slate-400 hover:text-red-500 transition-all" data-del="${r.id}" title="Eliminar"><span class="material-symbols-outlined text-[18px]">delete</span></button>
                 ` : '';
@@ -311,8 +313,9 @@
                             <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 uppercase">${r.doc_type}</span>
                         </td>
                         <td class="px-5 py-4">
-                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold ${isVerified ? 'text-success bg-success/10' : 'text-orange-600 bg-orange-100'} px-2 py-1 rounded-full uppercase">
-                                <span class="w-1.5 h-1.5 rounded-full ${isVerified ? 'bg-success' : 'bg-orange-600'}"></span> ${isVerified ? 'Verificado' : 'Pendiente'}
+                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold ${isVerified ? 'text-success bg-success/10' : (r.status === 'PENDING_REVIEW' ? 'text-orange-600 bg-orange-100 border border-orange-200' : 'text-slate-600 bg-slate-100')} px-2 py-1 rounded-full uppercase">
+                                <span class="w-1.5 h-1.5 rounded-full ${isVerified ? 'bg-success' : (r.status === 'PENDING_REVIEW' ? 'bg-orange-600' : 'bg-slate-400')}"></span> 
+                                ${isVerified ? 'Verificado' : (r.status === 'PENDING_REVIEW' ? 'Por Revisar' : 'Pendiente')}
                             </span>
                         </td>
                         <td class="px-5 py-4 font-mono text-xs text-slate-500 bg-slate-50/50 rounded pointer-events-auto selection:bg-corporate-blue selection:text-white">${r.token}</td>
@@ -321,6 +324,7 @@
                                 <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all" data-qr="${r.token}" title="Ver QR"><span class="material-symbols-outlined text-[18px]">qr_code_2</span></button>
                                 <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all" data-copy="${r.token}" title="Copiar URL"><span class="material-symbols-outlined text-[18px]">link</span></button>
                                 <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-primary transition-all" data-download="${r.token}" title="Descargar PDF"><span class="material-symbols-outlined text-[18px]">download</span></button>
+                                ${r.status === 'PENDING_REVIEW' ? `<button class="p-1.5 hover:bg-success/10 rounded-md text-success hover:text-success transition-all tja-btn-approve" data-approve="${r.id}" title="Aprobar y Enviar Correo"><span class="material-symbols-outlined text-[18px]">mark_email_read</span></button>` : ''}
                                 ${manageButtons}
                             </div>
                         </td>
@@ -371,6 +375,69 @@
             const del = btn.getAttribute('data-del');
             const qr = btn.getAttribute('data-qr');
             const download = btn.getAttribute('data-download');
+            const approve = btn.getAttribute('data-approve');
+            const editPartId = btn.getAttribute('data-edit-participant');
+
+            if (editPartId) {
+                const name = btn.getAttribute('data-name');
+                const email = btn.getAttribute('data-email');
+                const { value: formValues } = await Swal.fire({
+                    title: 'Corregir Participante',
+                    html:
+                        `<div class="text-left space-y-3">
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 uppercase">Nombre Completo</label>
+                                <input id="swal-name" class="swal2-input !m-0 !w-full" value="${name}">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 uppercase">Correo Electrónico</label>
+                                <input id="swal-email" class="swal2-input !m-0 !w-full" value="${email}">
+                            </div>
+                        </div>`,
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Guardar cambios',
+                    preConfirm: () => {
+                        return {
+                            full_name: document.getElementById('swal-name').value,
+                            email: document.getElementById('swal-email').value
+                        }
+                    }
+                });
+
+                if (formValues) {
+                    try {
+                        formValues.csrf = csrf;
+                        formValues.type = 'EXTERNAL'; // Default for webhook-created
+                        await fetchJson(`/admin/api/participants/${editPartId}`, { method: 'PUT', body: formValues });
+                        load(search.value);
+                        Swal.fire({ icon: 'success', title: 'Datos actualizados', timer: 1000, showConfirmButton: false });
+                    } catch (err) {
+                        Swal.fire({ icon: 'error', title: 'Error', text: err.message });
+                    }
+                }
+                return;
+            }
+
+            if (approve) {
+                const confirm = await Swal.fire({
+                    icon: 'question',
+                    title: '¿Aprobar constancia?',
+                    text: 'Se cambiará el estado a VERIFICADO y se enviará el correo al participante.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, aprobar y enviar'
+                });
+                if (confirm.isConfirmed) {
+                    try {
+                        const res = await fetchJson(`/admin/api/certificates/approve/${approve}`, { method: 'POST', body: { csrf } });
+                        load(search.value);
+                        Swal.fire({ icon: 'success', title: 'Aprobado', text: res.message, timer: 1500, showConfirmButton: false });
+                    } catch (err) {
+                        Swal.fire({ icon: 'error', title: 'Error', text: err.message });
+                    }
+                }
+                return;
+            }
 
             if (download) {
                 window.open(base + 'admin/api/certificates/download/' + download, '_blank');
