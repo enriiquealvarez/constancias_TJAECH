@@ -380,8 +380,46 @@
         }
 
         table.addEventListener('click', async (e) => {
+            // Priority 1: Handle Switch (it's a label/input, not a button)
+            const switchEl = e.target.closest('.tja-switch');
+            if (switchEl && canManage) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const input = switchEl.querySelector('input');
+                const label = switchEl.querySelector('.tja-switch-label');
+                const toggleId = input.getAttribute('data-toggle-status');
+                
+                if (toggleId) {
+                    const isChecked = !input.checked;
+                    const next = isChecked ? 'VERIFIED' : 'PENDING_REVIEW';
+                    const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+                    // Optimistic UI update
+                    input.checked = isChecked;
+                    label.textContent = isChecked ? 'Verificado' : 'Pendiente';
+                    
+                    try {
+                        const res = await fetchJson(`/admin/api/certificates/status/${toggleId}`, { 
+                            method: 'POST', 
+                            body: { csrf, status: next } 
+                        });
+                        if (!res.ok) throw new Error(res.message);
+                        load(search.value);
+                    } catch (err) {
+                        // Revert on error
+                        input.checked = !isChecked;
+                        label.textContent = !isChecked ? 'Verificado' : 'Pendiente';
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar: ' + err.message });
+                    }
+                }
+                return;
+            }
+
+            // Priority 2: Handle Buttons
             const btn = e.target.closest('button');
             if (!btn) return;
+            
             const status = btn.getAttribute('data-status');
             const current = btn.getAttribute('data-current');
             const copy = btn.getAttribute('data-copy');
@@ -556,51 +594,6 @@
                 await navigator.clipboard.writeText(url);
                 Swal.fire({ icon: 'success', title: 'URL copiada', timer: 1200, showConfirmButton: false });
                 return;
-            }
-
-            const switchEl = e.target.closest('.tja-switch');
-            if (switchEl && canManage) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const input = switchEl.querySelector('input');
-                const label = switchEl.querySelector('.tja-switch-label');
-                const toggleId = input.getAttribute('data-toggle-status');
-                
-                if (toggleId) {
-                    const isChecked = !input.checked;
-                    const next = isChecked ? 'VERIFIED' : 'NOT_VERIFIED';
-                    const csrf = document.querySelector('meta[name="csrf-token"]').content;
-
-                    // Optimistic UI update
-                    input.checked = isChecked;
-                    label.textContent = isChecked ? 'Verificado' : 'Pendiente';
-                    
-                    try {
-                        const res = await fetchJson(`/admin/api/certificates/status/${toggleId}`, { 
-                            method: 'POST', 
-                            body: { csrf, status: next } 
-                        });
-                        if (!res.ok) throw new Error(res.message);
-                        load(search.value);
-                    } catch (err) {
-                        // Revert on error
-                        input.checked = !isChecked;
-                        label.textContent = !isChecked ? 'Verificado' : 'Pendiente';
-                        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar: ' + err.message });
-                    }
-                }
-                return;
-            }
-
-            if (status && canManage) {
-                const next = current === 'VERIFIED' ? 'NOT_VERIFIED' : 'VERIFIED';
-                try {
-                    await fetchJson(`/admin/api/certificates/status/${status}`, { method: 'POST', body: { csrf, status: next } });
-                    load(search.value);
-                } catch (err) {
-                    Swal.fire({ icon: 'error', title: 'Error', text: err.message });
-                }
             }
 
             if (del && canManage) {
