@@ -129,7 +129,7 @@ class ApiController extends Controller
                 $payload = $this->jsonPayload();
                 $this->csrfGuard($payload);
                 $this->validateCertificate($payload);
-                $payload['status'] = $payload['status'] ?? 'NOT_VERIFIED';
+                $payload['status'] = $payload['status'] ?? 'PENDING_REVIEW';
                 $id = Certificate::create($payload);
                 AuditLog::add($_SESSION['user']['id'], 'CREATE', 'certificates', $id);
                 $this->json(['ok' => true, 'id' => $id]);
@@ -171,7 +171,7 @@ class ApiController extends Controller
             $this->requireCapability('manage_certificates');
             $payload = $this->jsonPayload();
             $this->csrfGuard($payload);
-            Certificate::setStatus((int)$m[1], $payload['status'] ?? 'NOT_VERIFIED');
+            Certificate::setStatus((int)$m[1], $payload['status'] ?? 'PENDING_REVIEW');
             AuditLog::add($_SESSION['user']['id'], 'STATUS', 'certificates', (int)$m[1]);
             $this->json(['ok' => true]);
         }

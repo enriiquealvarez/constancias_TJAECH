@@ -9,12 +9,10 @@ class Certificate
     {
         $pdo = Database::connection();
         $total = $pdo->query('SELECT COUNT(c.id) AS c FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id')->fetch()['c'] ?? 0;
-        $verified = $pdo->query("SELECT COUNT(c.id) AS c FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id WHERE c.status = 'VERIFIED'");
-        $verifiedCount = $verified->fetch()['c'] ?? 0;
-        $not = $pdo->query("SELECT COUNT(c.id) AS c FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id WHERE c.status = 'NOT_VERIFIED'");
-        $notCount = $not->fetch()['c'] ?? 0;
-        $pending = $pdo->query("SELECT COUNT(c.id) AS c FROM certificates c JOIN participants p ON p.id = c.participant_id JOIN courses crs ON crs.id = c.course_id WHERE c.status = 'PENDING_REVIEW'");
-        $pendingCount = $pending->fetch()['c'] ?? 0;
+        $verifiedCount = $pdo->query("SELECT COUNT(c.id) AS c FROM certificates c WHERE c.status = 'VERIFIED'")->fetch()['c'] ?? 0;
+        $notCount = $pdo->query("SELECT COUNT(c.id) AS c FROM certificates c WHERE c.status = 'NOT_VERIFIED'")->fetch()['c'] ?? 0;
+        $pendingCount = $pdo->query("SELECT COUNT(c.id) AS c FROM certificates c WHERE c.status = 'PENDING_REVIEW' OR c.status = ''")->fetch()['c'] ?? 0;
+        
         return [
             'ok' => true,
             'total' => (int)$total,
