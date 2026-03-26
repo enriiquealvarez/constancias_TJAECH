@@ -851,32 +851,34 @@ body.tja-body {
     cursor: pointer;
     user-select: none;
     gap: 8px;
+    padding: 2px;
 }
 
 .tja-switch-input {
-    display: none;
+    display: none !important;
 }
 
 .tja-switch-slider {
     position: relative;
-    width: 32px;
-    height: 18px;
-    background-color: #cbd5e1;
+    width: 44px;
+    height: 22px;
+    background-color: #e2e8f0;
     border-radius: 20px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .tja-switch-slider::before {
     content: "";
     position: absolute;
-    height: 14px;
-    width: 14px;
+    height: 18px;
+    width: 18px;
     left: 2px;
     bottom: 2px;
     background-color: white;
     border-radius: 50%;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .tja-switch-input:checked + .tja-switch-slider {
@@ -884,15 +886,16 @@ body.tja-body {
 }
 
 .tja-switch-input:checked + .tja-switch-slider::before {
-    transform: translateX(14px);
+    transform: translateX(22px);
 }
 
 .tja-switch-label {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     color: #64748b;
     transition: color 0.3s;
+    min-width: 65px;
 }
 
 .tja-switch-input:checked ~ .tja-switch-label {

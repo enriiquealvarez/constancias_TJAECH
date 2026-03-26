@@ -323,7 +323,7 @@
                             <label class="tja-switch ${!canManage ? 'pointer-events-none opacity-70' : ''}" title="${isVerified ? 'Click para marcar como Pendiente' : 'Click para marcar como Verificado'}">
                                 <input type="checkbox" class="tja-switch-input" data-toggle-status="${r.id}" ${isVerified ? 'checked' : ''}>
                                 <span class="tja-switch-slider"></span>
-                                <span class="tja-switch-label">${isVerified ? 'Verificado' : (isPendingReview ? 'Por Revisar' : 'Pendiente')}</span>
+                                <span class="tja-switch-label">${isVerified ? 'Verificado' : 'Pendiente'}</span>
                             </label>
                         </td>
                         <td class="px-5 py-4 font-mono text-xs text-slate-500 bg-slate-50/50 rounded pointer-events-auto selection:bg-corporate-blue selection:text-white">${r.token}</td>
@@ -552,17 +552,21 @@
                 return;
             }
 
-            const toggleId = e.target.closest('.tja-switch-input')?.getAttribute('data-toggle-status');
-            if (toggleId && canManage) {
-                const isChecked = e.target.closest('.tja-switch-input').checked;
-                const next = isChecked ? 'VERIFIED' : 'NOT_VERIFIED';
-                try {
-                    await fetchJson(`/admin/api/certificates/status/${toggleId}`, { method: 'POST', body: { csrf, status: next } });
-                    load(search.value);
-                } catch (err) {
-                    Swal.fire({ icon: 'error', title: 'Error', text: err.message });
+            const switchEl = e.target.closest('.tja-switch');
+            if (switchEl && canManage) {
+                const input = switchEl.querySelector('input');
+                const toggleId = input.getAttribute('data-toggle-status');
+                if (toggleId) {
+                    const isChecked = input.checked;
+                    const next = isChecked ? 'VERIFIED' : 'NOT_VERIFIED';
+                    try {
+                        await fetchJson(`/admin/api/certificates/status/${toggleId}`, { method: 'POST', body: { csrf, status: next } });
+                        load(search.value);
+                    } catch (err) {
+                        Swal.fire({ icon: 'error', title: 'Error', text: err.message });
+                    }
+                    return;
                 }
-                return;
             }
 
             if (status && canManage) {
