@@ -46,11 +46,19 @@ class CertificateGenerator
         $pdf->Cell(237, 15, $name, 0, 1, 'C');
 
         // Print paragraph text
-        $pdf->SetFont('helvetica', '', 12);
         $pdf->SetTextColor(20, 20, 20);
         $pdf->SetXY(40, 134);
-        $courseName = htmlspecialchars($data['course'] ?? '', ENT_QUOTES, 'UTF-8');
-        $htmlText = 'Por su participación en el <b>"Programa de Capacitación: ' . $courseName . '"</b>, con el objetivo de fortalecer las capacidades institucionales y promover el ejercicio responsable, ético y transparente del servicio público.';
+        $courseName = trim($data['course'] ?? '');
+        $prefix = "Programa de Capacitación:";
+        
+        // Avoid redundant prefix if it's already in the course name
+        if (mb_stripos($courseName, $prefix) === 0) {
+            $displayText = $courseName;
+        } else {
+            $displayText = $prefix . ' ' . $courseName;
+        }
+
+        $htmlText = 'Por su participación en el <b>"' . htmlspecialchars($displayText, ENT_QUOTES, 'UTF-8') . '"</b>, con el objetivo de fortalecer las capacidades institucionales y promover el ejercicio responsable, ético y transparente del servicio público.';
         $pdf->writeHTMLCell(217, 8, 40, 134, $htmlText, 0, 1, false, true, 'C', true);
 
         // Date

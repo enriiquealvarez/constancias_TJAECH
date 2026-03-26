@@ -299,7 +299,7 @@
             table.innerHTML = data.data.map(r => {
                 const isVerified = r.status === 'VERIFIED';
                 const manageButtons = canManage ? `
-                    <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-blue-600 transition-all font-bold" data-edit-participant="${r.participant_id}" data-name="${r.full_name}" data-email="${r.email || ''}" title="Corregir nombre/correo"><span class="material-symbols-outlined text-[18px]">edit_note</span></button>
+                    <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-blue-600 transition-all font-bold" data-edit-participant="${r.participant_id}" data-name="${r.full_name}" data-email="${r.email || ''}" data-course-id="${r.course_id}" data-course-name="${r.course_name}" title="Corregir datos de constancia"><span class="material-symbols-outlined text-[18px]">edit_note</span></button>
                     <button class="p-1.5 hover:bg-slate-100 rounded-md text-slate-400 hover:text-blue-600 transition-all" data-status="${r.id}" data-current="${r.status}" title="Cambiar estado"><span class="material-symbols-outlined text-[18px]">sync_alt</span></button>
                     <button class="p-1.5 hover:bg-red-50 rounded-md text-slate-400 hover:text-red-500 transition-all" data-del="${r.id}" title="Eliminar"><span class="material-symbols-outlined text-[18px]">delete</span></button>
                 ` : '';
@@ -381,17 +381,24 @@
             if (editPartId) {
                 const name = btn.getAttribute('data-name');
                 const email = btn.getAttribute('data-email');
+                const courseId = btn.getAttribute('data-course-id');
+                const courseName = btn.getAttribute('data-course-name');
                 const { value: formValues } = await Swal.fire({
-                    title: 'Corregir Participante',
+                    title: 'Control de Calidad: Corregir Datos',
                     html:
-                        `<div class="text-left space-y-3">
+                        `<div class="text-left space-y-4">
                             <div>
-                                <label class="text-xs font-bold text-slate-500 uppercase">Nombre Completo</label>
+                                <label class="text-[10px] font-bold text-slate-500 uppercase">Nombre del Participante</label>
                                 <input id="swal-name" class="swal2-input !m-0 !w-full" value="${name}">
                             </div>
                             <div>
-                                <label class="text-xs font-bold text-slate-500 uppercase">Correo Electrónico</label>
+                                <label class="text-[10px] font-bold text-slate-500 uppercase">Correo Electrónico</label>
                                 <input id="swal-email" class="swal2-input !m-0 !w-full" value="${email}">
+                            </div>
+                            <div class="pt-2 border-t border-slate-100">
+                                <label class="text-[10px] font-bold text-primary uppercase">Nombre del Curso (Afecta a todos)</label>
+                                <textarea id="swal-course" class="swal2-textarea !m-0 !w-full !text-sm" rows="3">${courseName}</textarea>
+                                <p class="text-[9px] text-slate-400 mt-1 italic">* El sistema corregirá automáticamente duplicados de "Programa de Capacitación:".</p>
                             </div>
                         </div>`,
                     focusConfirm: false,
@@ -400,16 +407,33 @@
                     preConfirm: () => {
                         return {
                             full_name: document.getElementById('swal-name').value,
-                            email: document.getElementById('swal-email').value
+                            email: document.getElementById('swal-email').value,
+                            course_name: document.getElementById('swal-course').value
                         }
                     }
                 });
 
                 if (formValues) {
                     try {
-                        formValues.csrf = csrf;
-                        formValues.type = 'EXTERNAL'; // Default for webhook-created
-                        await fetchJson(`/admin/api/participants/${editPartId}`, { method: 'PUT', body: formValues });
+                        const pSave = fetchJson(`/admin/api/participants/${editPartId}`, { 
+                            method: 'PUT', 
+                            body: { 
+                                csrf, 
+                                full_name: formValues.full_name, 
+                                email: formValues.email, 
+                                type: 'EXTERNAL' 
+                            } 
+                        });
+                        
+                        const cSave = fetchJson(`/admin/api/courses/${courseId}`, { 
+                            method: 'PUT', 
+                            body: { 
+                                csrf, 
+                                name: formValues.course_name 
+                            } 
+                        });
+
+                        await Promise.all([pSave, cSave]);
                         load(search.value);
                         Swal.fire({ icon: 'success', title: 'Datos actualizados', timer: 1000, showConfirmButton: false });
                     } catch (err) {

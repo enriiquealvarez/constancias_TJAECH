@@ -33,13 +33,22 @@ class Participant
     public static function update($id, $data)
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('UPDATE participants SET full_name = ?, email = ?, type = ? WHERE id = ?');
-        $stmt->execute([
-            trim($data['full_name'] ?? ''),
-            trim($data['email'] ?? ''),
-            $data['type'] ?? 'INTERNAL',
-            $id,
-        ]);
+        $fields = [];
+        $params = [];
+        
+        foreach (['full_name', 'email', 'type'] as $f) {
+            if (isset($data[$f])) {
+                $fields[] = "$f = ?";
+                $params[] = trim($data[$f] ?? '');
+            }
+        }
+        
+        if (empty($fields)) return;
+        
+        $params[] = $id;
+        $sql = "UPDATE participants SET " . implode(', ', $fields) . " WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
     }
 
     public static function delete($id)

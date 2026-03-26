@@ -37,17 +37,23 @@ class Course
     public static function update($id, $data)
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('UPDATE courses SET name = ?, edition = ?, cert_date = ?, modality = ?, area = ?, background_image = COALESCE(?, background_image), speaker_background_image = COALESCE(?, speaker_background_image) WHERE id = ?');
-        $stmt->execute([
-            trim($data['name'] ?? ''),
-            trim($data['edition'] ?? ''),
-            $data['cert_date'] ?? null,
-            trim($data['modality'] ?? ''),
-            trim($data['area'] ?? ''),
-            $data['background_image'] ?? null,
-            $data['speaker_background_image'] ?? null,
-            $id,
-        ]);
+        $fields = [];
+        $params = [];
+        
+        $allowed = ['name', 'edition', 'cert_date', 'modality', 'area', 'background_image', 'speaker_background_image'];
+        foreach ($allowed as $f) {
+            if (isset($data[$f])) {
+                $fields[] = "$f = ?";
+                $params[] = $f === 'cert_date' ? ($data[$f] ?: null) : trim($data[$f] ?? '');
+            }
+        }
+        
+        if (empty($fields)) return;
+        
+        $params[] = $id;
+        $sql = "UPDATE courses SET " . implode(', ', $fields) . " WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
     }
 
     public static function delete($id)
