@@ -4,21 +4,25 @@
     const loader = document.getElementById('tja-loader');
     let pending = 0;
 
-    const setLoading = (active) => {
+    const setLoading = (active, message = 'Procesando...') => {
         if (!loader) return;
+        const textEl = loader.querySelector('.text-sm');
+        if (textEl) {
+            textEl.textContent = message;
+        }
         if (active) {
             pending += 1;
-            loader.classList.remove('d-none');
+            loader.style.setProperty('display', 'flex', 'important');
         } else {
             pending = Math.max(0, pending - 1);
             if (pending === 0) {
-                loader.classList.add('d-none');
+                loader.style.setProperty('display', 'none', 'important');
             }
         }
     };
 
     const fetchJson = async (url, options = {}) => {
-        setLoading(true);
+        setLoading(true, options.loaderText || 'Procesando...');
         const opts = Object.assign({
             headers: { 'Content-Type': 'application/json' }
         }, options);
@@ -513,7 +517,11 @@
 
                 if (result.isConfirmed) {
                     try {
-                        const data = await fetchJson(`/admin/api/certificates/approve/${approveId}`, { method: 'POST', body: { csrf } });
+                        const data = await fetchJson(`/admin/api/certificates/approve/${approveId}`, { 
+                            method: 'POST', 
+                            body: { csrf },
+                            loaderText: 'Generando y enviando constancia por correo. Por favor, espere...'
+                        });
                         if (data.ok) {
                             Swal.fire({ icon: 'success', title: 'Completado', text: data.message, timer: 2000, showConfirmButton: false });
                             load(search.value);
@@ -604,7 +612,11 @@
                 });
                 if (confirm.isConfirmed) {
                     try {
-                        const res = await fetchJson(`/admin/api/certificates/approve/${approve}`, { method: 'POST', body: { csrf } });
+                        const res = await fetchJson(`/admin/api/certificates/approve/${approve}`, { 
+                            method: 'POST', 
+                            body: { csrf },
+                            loaderText: 'Generando y enviando constancia por correo. Por favor, espere...'
+                        });
                         load(search.value);
                         Swal.fire({ icon: 'success', title: 'Aprobado', text: res.message, timer: 1500, showConfirmButton: false });
                     } catch (err) {
