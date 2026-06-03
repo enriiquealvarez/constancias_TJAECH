@@ -95,8 +95,22 @@
 
         search.addEventListener('input', e => load(e.target.value));
 
+        const resetCoursePreviews = () => {
+            const bgContainer = document.getElementById('bgImagePreviewContainer');
+            const speakerContainer = document.getElementById('speakerBgImagePreviewContainer');
+            if (bgContainer) bgContainer.classList.add('hidden');
+            if (speakerContainer) speakerContainer.classList.add('hidden');
+            const bgPreview = document.getElementById('bgImagePreview');
+            const speakerPreview = document.getElementById('speakerBgImagePreview');
+            if (bgPreview) bgPreview.src = '';
+            if (speakerPreview) speakerPreview.src = '';
+        };
+
         if (reset && form) {
-            reset.addEventListener('click', () => form.reset());
+            reset.addEventListener('click', () => {
+                form.reset();
+                resetCoursePreviews();
+            });
         }
 
         if (form) {
@@ -136,6 +150,7 @@
                         await fetchJson('/admin/api/courses', { method: 'POST', body: payload });
                     }
                     form.reset();
+                    resetCoursePreviews();
                     load(search.value);
                     Swal.fire({ icon: 'success', title: 'Guardado', timer: 1200, showConfirmButton: false });
                 } catch (err) {
@@ -159,6 +174,35 @@
                 form.modality.value = row.modality || '';
                 form.area.value = row.area || '';
                 form.cert_text_template.value = row.cert_text_template || '';
+
+                // Populate Previews
+                const bgContainer = document.getElementById('bgImagePreviewContainer');
+                const bgPreview = document.getElementById('bgImagePreview');
+                const bgName = document.getElementById('bgImageName');
+                if (bgContainer && bgPreview && bgName) {
+                    if (row.background_image) {
+                        bgPreview.src = base + 'assets/certificates/' + row.background_image;
+                        bgName.textContent = row.background_image;
+                        bgContainer.classList.remove('hidden');
+                    } else {
+                        bgPreview.src = '';
+                        bgContainer.classList.add('hidden');
+                    }
+                }
+
+                const speakerContainer = document.getElementById('speakerBgImagePreviewContainer');
+                const speakerPreview = document.getElementById('speakerBgImagePreview');
+                const speakerName = document.getElementById('speakerBgImageName');
+                if (speakerContainer && speakerPreview && speakerName) {
+                    if (row.speaker_background_image) {
+                        speakerPreview.src = base + 'assets/certificates/' + row.speaker_background_image;
+                        speakerName.textContent = row.speaker_background_image;
+                        speakerContainer.classList.remove('hidden');
+                    } else {
+                        speakerPreview.src = '';
+                        speakerContainer.classList.add('hidden');
+                    }
+                }
             }
             if (del && canManage) {
                 const confirm = await Swal.fire({
@@ -178,6 +222,20 @@
                 }
             }
         });
+
+        const zoomImg = (src) => {
+            if (src) {
+                Swal.fire({
+                    imageUrl: src,
+                    imageAlt: 'Vista previa de la plantilla',
+                    showConfirmButton: false,
+                    width: 'auto',
+                    maxWidth: '90%'
+                });
+            }
+        };
+        document.getElementById('bgImagePreview')?.addEventListener('click', (e) => zoomImg(e.target.src));
+        document.getElementById('speakerBgImagePreview')?.addEventListener('click', (e) => zoomImg(e.target.src));
     }
 
     if (page === 'Participantes') {

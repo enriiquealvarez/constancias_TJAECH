@@ -53,11 +53,25 @@
                         <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Plantilla de Constancia (JPG/PNG)</label>
                         <input type="file" id="bgImageInput" accept="image/jpeg, image/png" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors">
                         <input type="hidden" name="background_image" id="bgImageBase64">
+                        <div id="bgImagePreviewContainer" class="hidden mt-2 p-2.5 border border-slate-200 rounded-lg bg-slate-50/50">
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Plantilla de Constancia Actual:</span>
+                            <div class="flex items-center gap-3">
+                                <img id="bgImagePreview" src="" class="h-16 w-24 rounded border border-slate-200 object-cover shadow-sm cursor-zoom-in hover:brightness-95 transition-all" title="Ver tamaño completo">
+                                <span id="bgImageName" class="text-xs text-slate-500 truncate max-w-[180px]"></span>
+                            </div>
+                        </div>
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Plantilla de Reconocimiento Ponente (JPG/PNG)</label>
                         <input type="file" id="speakerBgImageInput" accept="image/jpeg, image/png" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors">
                         <input type="hidden" name="speaker_background_image" id="speakerBgImageBase64">
+                        <div id="speakerBgImagePreviewContainer" class="hidden mt-2 p-2.5 border border-slate-200 rounded-lg bg-slate-50/50">
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Plantilla de Ponente Actual:</span>
+                            <div class="flex items-center gap-3">
+                                <img id="speakerBgImagePreview" src="" class="h-16 w-24 rounded border border-slate-200 object-cover shadow-sm cursor-zoom-in hover:brightness-95 transition-all" title="Ver tamaño completo">
+                                <span id="speakerBgImageName" class="text-xs text-slate-500 truncate max-w-[180px]"></span>
+                            </div>
+                        </div>
                     </div>
                     <div class="pt-4 flex items-center gap-3">
                         <button type="submit" class="flex-1 bg-primary hover:bg-primary/95 text-white font-bold py-3 px-4 rounded-lg shadow-[0_4px_14px_0_rgba(27,69,111,0.39)] hover:shadow-[0_6px_20px_rgba(27,69,111,0.23)] hover:-translate-y-0.5 transition-all text-[11px] uppercase tracking-widest flex items-center justify-center gap-2">
