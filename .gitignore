@@ -3,3 +3,4 @@
 /storage/*.log
 /storage/mail.log
 /public/error_log
+.env
