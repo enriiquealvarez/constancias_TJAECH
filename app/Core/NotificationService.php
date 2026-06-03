@@ -55,10 +55,10 @@ class NotificationService
             <div style='font-size: 13px; opacity: 0.9;'>Tribunal de Justicia Administrativa del Estado de Chiapas</div>
         </div>
         <div style='padding: 30px;'>
-            <h2 style='margin-top: 0; color: #111827; font-size: 22px;'>¡Felicidades por tu logro!</h2>
-            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Hola <strong>{$name}</strong>,</p>
-            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Has concluido satisfactoriamente tu evaluación para el programa de capacitación <strong>\"{$courseName}\"</strong>.</p>
-            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Adjuntamos a este correo tu <strong>" . strtolower($docType) . " oficial</strong> en formato PDF. También puedes consultarla y verificar su autenticidad ingresando al siguiente enlace:</p>
+            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'><strong>{$name}</strong>,</p>
+            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Nos complace informarle que ha acreditado satisfactoriamente el <strong>\"{$courseName}\"</strong>.</p>
+            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Por este medio, se adjunta su constancia oficial en formato PDF.</p>
+            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Asimismo, podrá consultarla y verificar su autenticidad a través del siguiente enlace:</p>
             
             <div style='margin: 30px 0; text-align: center;'>
                 <a href='{$link}' style='display: inline-block; background-color: #1b3f66; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; font-size: 15px;'>Ver verificación oficial</a>
@@ -89,7 +89,7 @@ class NotificationService
     </div>
 </div>";
         
-        $text = "Felicidades {$name}\n\nHas concluido satisfactoriamente tu evaluacion para {$courseName}.\n\nPuedes ver tu documento oficial aqui: {$link}\n\nPor favor, confirma la recepcion en el siguiente enlace: {$confirmLink}\n\nTribunal de Justicia Administrativa del Estado de Chiapas";
+        $text = "{$name},\n\nNos complace informarle que ha acreditado satisfactoriamente el \"{$courseName}\".\n\nPor este medio, se adjunta su constancia oficial en formato PDF.\n\nAsimismo, podrá consultarla y verificar su autenticidad a través del siguiente enlace: {$link}\n\nPor favor, confirma la recepción en el siguiente enlace: {$confirmLink}\n\nTribunal de Justicia Administrativa del Estado de Chiapas";
 
         try {
             $attachments = [];
