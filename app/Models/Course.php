@@ -21,7 +21,7 @@ class Course
     public static function create($data)
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('INSERT INTO courses (name, edition, cert_date, modality, area, background_image, speaker_background_image) VALUES (?, ?, ?, ?, ?, ?, ?)');
+        $stmt = $pdo->prepare('INSERT INTO courses (name, edition, cert_date, modality, area, background_image, speaker_background_image, cert_text_template) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->execute([
             trim($data['name'] ?? ''),
             trim($data['edition'] ?? ''),
@@ -30,6 +30,7 @@ class Course
             trim($data['area'] ?? ''),
             $data['background_image'] ?? null,
             $data['speaker_background_image'] ?? null,
+            trim($data['cert_text_template'] ?? '') ?: null,
         ]);
         return (int)$pdo->lastInsertId();
     }
@@ -40,9 +41,13 @@ class Course
         $fields = [];
         $params = [];
         
-        $allowed = ['name', 'edition', 'cert_date', 'modality', 'area', 'background_image', 'speaker_background_image'];
+        $allowed = ['name', 'edition', 'cert_date', 'modality', 'area', 'background_image', 'speaker_background_image', 'cert_text_template'];
         foreach ($allowed as $f) {
             if (isset($data[$f])) {
+                // Prevent overriding background templates with empty strings
+                if (in_array($f, ['background_image', 'speaker_background_image']) && trim((string)$data[$f]) === '') {
+                    continue;
+                }
                 $fields[] = "$f = ?";
                 $params[] = $f === 'cert_date' ? ($data[$f] ?: null) : trim($data[$f] ?? '');
             }

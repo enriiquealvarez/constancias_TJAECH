@@ -32,7 +32,7 @@ class CertificateGenerator
         // Dynamic Font Size for name to prevent overflow
         $name = mb_strtoupper($data['name'] ?? '');
         $fontSize = 32;
-        $maxWidth = 220; // Slightly less than 237 to leave margins
+        $maxWidth = 210; // Center margins
         
         $pdf->SetFont('times', 'B', $fontSize);
         while ($pdf->GetStringWidth($name) > $maxWidth && $fontSize > 12) {
@@ -43,30 +43,42 @@ class CertificateGenerator
         // RGB Color for name
         $pdf->SetTextColor(60, 60, 60);
         $pdf->SetXY(30, 114);
-        $pdf->Cell(237, 15, $name, 0, 1, 'C');
+        $pdf->Cell(219.4, 15, $name, 0, 1, 'C');
 
         // Print paragraph text
         $pdf->SetFont('helvetica', '', 12);
         $pdf->SetTextColor(20, 20, 20);
-        $pdf->SetXY(40, 134);
+        $pdf->SetXY(30, 134);
         $courseName = trim($data['course'] ?? '');
-        $prefix = "Programa de Capacitación:";
         
-        // Avoid redundant prefix if it's already in the course name
-        if (mb_stripos($courseName, $prefix) === 0) {
-            $displayText = $courseName;
+        // Use custom template if provided, substituting the course name placeholder
+        $template = trim($data['cert_text_template'] ?? '');
+        if ($template !== '') {
+            // Replace {curso}, {CURSO}, {curso_nombre}, etc.
+            $template = str_replace(
+                ['{curso}', '{CURSO}', '(nombre del curso)', '(nombre del curso que corresponda)', '(nombre del curso que corresponda).'],
+                '<b>"' . htmlspecialchars($courseName, ENT_QUOTES, 'UTF-8') . '"</b>',
+                $template
+            );
+            $htmlText = $template;
         } else {
-            $displayText = $prefix . ' ' . $courseName;
+            $prefix = "Programa de Capacitación:";
+            // Avoid redundant prefix if it's already in the course name
+            if (mb_stripos($courseName, $prefix) === 0) {
+                $displayText = $courseName;
+            } else {
+                $displayText = $prefix . ' ' . $courseName;
+            }
+            $htmlText = 'Por su participación en el <b>"' . htmlspecialchars($displayText, ENT_QUOTES, 'UTF-8') . '"</b>, con el objetivo de fortalecer las capacidades institucionales y promover el ejercicio responsable, ético y transparente del servicio público.';
         }
 
-        $htmlText = 'Por su participación en el <b>"' . htmlspecialchars($displayText, ENT_QUOTES, 'UTF-8') . '"</b>, con el objetivo de fortalecer las capacidades institucionales y promover el ejercicio responsable, ético y transparente del servicio público.';
-        $pdf->writeHTMLCell(217, 8, 40, 134, $htmlText, 0, 1, false, true, 'C', true);
+        $pdf->writeHTMLCell(219.4, 8, 30, 134, $htmlText, 0, 1, false, true, 'C', true);
 
         // Date
         $pdf->SetFont('helvetica', '', 11);
         $currentY = $pdf->GetY();
         // Agregamos un margen de 4mm bajo el texto
-        $pdf->SetXY(40, $currentY + 4);
+        $pdf->SetXY(30, $currentY + 4);
         $certDateStr = $data['cert_date'] ?? null;
         if ($certDateStr && preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $certDateStr, $matches)) {
             $year = $matches[1];
@@ -76,7 +88,7 @@ class CertificateGenerator
         } else {
             $dateText = "Tuxtla Gutiérrez, Chiapas, a " . date('d \d\e ') . mb_strtolower(self::monthName(date('n')), 'UTF-8') . date(' \d\e Y');
         }
-        $pdf->Cell(217, 8, $dateText, 0, 1, 'C');
+        $pdf->Cell(219.4, 8, $dateText, 0, 1, 'C');
 
         // Print QR Code
         $url = $data['url'] ?? '';

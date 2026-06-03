@@ -22,6 +22,11 @@ class App
             return;
         }
 
+        if ($uri === '/confirmar-recepcion') {
+            (new \app\Controllers\PublicController())->confirmReceipt();
+            return;
+        }
+
         if (preg_match('#^/c/([A-Za-z0-9_-]+)$#', $uri, $m)) {
             (new \app\Controllers\PublicController())->show($m[1]);
             return;

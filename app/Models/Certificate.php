@@ -94,6 +94,14 @@ class Certificate
         $stmt->execute([$status, $id]);
     }
 
+    public static function confirmReceipt($token)
+    {
+        $pdo = Database::connection();
+        $stmt = $pdo->prepare('UPDATE certificates SET email_received = 1, email_received_at = NOW() WHERE token = ?');
+        $stmt->execute([$token]);
+        return $stmt->rowCount() > 0;
+    }
+
     public static function delete($id)
     {
         $pdo = Database::connection();

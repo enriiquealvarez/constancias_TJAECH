@@ -158,6 +158,7 @@
                 form.cert_date.value = row.cert_date || '';
                 form.modality.value = row.modality || '';
                 form.area.value = row.area || '';
+                form.cert_text_template.value = row.cert_text_template || '';
             }
             if (del && canManage) {
                 const confirm = await Swal.fire({
@@ -313,10 +314,18 @@
                     <button class="p-1.5 hover:bg-red-50 rounded-md text-slate-400 hover:text-red-500 transition-all" data-del="${r.id}" title="Eliminar"><span class="material-symbols-outlined text-[18px]">delete</span></button>
                 ` : '';
 
+                const emailReceivedBadge = r.email_received == 1 ? `
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200/50 px-1.5 py-0.5 rounded mt-1" title="Correo recibido y verificado el ${r.email_received_at || ''}">
+                        <span class="material-symbols-outlined text-[12px]">mark_email_read</span> Recibido
+                    </span>
+                ` : '';
+
                 return `
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-5 py-4">
                             <div class="text-sm font-semibold text-primary truncate max-w-[200px]">${r.full_name}</div>
+                            <div class="text-xs text-slate-400 truncate max-w-[200px]">${r.email || ''}</div>
+                            ${emailReceivedBadge}
                         </td>
                         <td class="px-5 py-4 text-sm text-slate-600 truncate max-w-[200px]">${r.course_name}</td>
                         <td class="px-5 py-4">

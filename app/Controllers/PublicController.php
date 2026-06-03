@@ -36,6 +36,27 @@ class PublicController extends Controller
         ], 'public');
     }
 
+    public function confirmReceipt()
+    {
+        $token = $_GET['token'] ?? '';
+        $record = Certificate::findByToken($token);
+        if (!$record) {
+            $this->render('public/not_found', [
+                'title' => 'Constancia no encontrada',
+                'token' => $token,
+            ], 'public');
+            return;
+        }
+
+        // Perform the update
+        Certificate::confirmReceipt($token);
+
+        $this->render('public/confirm_receipt', [
+            'title' => 'Recepción Confirmada',
+            'record' => $record,
+        ], 'public');
+    }
+
     public function notFound()
     {
         $this->render('public/not_found', [

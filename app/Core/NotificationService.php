@@ -46,7 +46,8 @@ class NotificationService
             error_log('Error generating PDF in NotificationService: ' . $e->getMessage());
         }
 
-        $subject = 'Felicidades, aqui esta tu ' . strtolower($docType);
+        $confirmLink = base_url('/confirmar-recepcion?token=' . $token);
+        $subject = 'Entrega de constancia';
         $html = "<div style='background-color: #f3f4f6; padding: 40px 20px; font-family: Arial, Helvetica, sans-serif; color: #333;'>
     <div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e5e7eb;'>
         <div style='background-color: #1b3f66; padding: 25px 30px; color: #ffffff;'>
@@ -60,7 +61,13 @@ class NotificationService
             <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Adjuntamos a este correo tu <strong>" . strtolower($docType) . " oficial</strong> en formato PDF. También puedes consultarla y verificar su autenticidad ingresando al siguiente enlace:</p>
             
             <div style='margin: 30px 0; text-align: center;'>
-                <a href='{$link}' style='display: inline-block; background-color: #1b3f66; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; font-size: 15px;'>Ver Documento Oficial</a>
+                <a href='{$link}' style='display: inline-block; background-color: #1b3f66; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; font-size: 15px;'>Ver verificación oficial</a>
+            </div>
+
+            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Agradecemos confirmar la recepción de su documento oficial presionando el siguiente enlace de confirmación:</p>
+            
+            <div style='margin: 30px 0; text-align: center;'>
+                <a href='{$confirmLink}' style='display: inline-block; background-color: #10b981; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; font-size: 15px;'>Confirmar Recepción</a>
             </div>
 
             <div style='background-color: #fcfcfc; border: 1px solid #eee; border-radius: 8px; padding: 20px; margin-bottom: 20px;'>
@@ -71,7 +78,7 @@ class NotificationService
                     <strong style='color: #1e293b;'>Contacto:</strong> <a href='mailto:informatica@tjaech.gob.mx' style='color: #2563eb; text-decoration: none;'>informatica@tjaech.gob.mx</a>
                 </p>
             </div>
-
+ 
             <p style='font-size: 13px; color: #64748b; margin-top: 30px;'>
                 Conserva este mensaje para futuras referencias sobre tu participación.
             </p>
@@ -82,7 +89,7 @@ class NotificationService
     </div>
 </div>";
         
-        $text = "Felicidades {$name}\n\nHas concluido satisfactoriamente tu evaluacion para {$courseName}.\n\nPuedes ver tu documento oficial aqui: {$link}\n\nTribunal de Justicia Administrativa del Estado de Chiapas";
+        $text = "Felicidades {$name}\n\nHas concluido satisfactoriamente tu evaluacion para {$courseName}.\n\nPuedes ver tu documento oficial aqui: {$link}\n\nPor favor, confirma la recepcion en el siguiente enlace: {$confirmLink}\n\nTribunal de Justicia Administrativa del Estado de Chiapas";
 
         try {
             $attachments = [];
