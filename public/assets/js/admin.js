@@ -226,11 +226,17 @@
         const zoomImg = (src) => {
             if (src) {
                 Swal.fire({
-                    imageUrl: src,
-                    imageAlt: 'Vista previa de la plantilla',
-                    showConfirmButton: false,
-                    width: 'auto',
-                    maxWidth: '90%'
+                    title: 'Previsualización de Plantilla',
+                    html: `
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px;">
+                            <img src="${src}" style="max-width: 100%; max-height: 60vh; object-fit: contain; border-radius: 6px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.08);" />
+                        </div>
+                    `,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Cerrar Vista Previa',
+                    confirmButtonColor: '#1b456f',
+                    width: '80%',
+                    maxWidth: '900px'
                 });
             }
         };
