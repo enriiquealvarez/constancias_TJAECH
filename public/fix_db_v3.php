@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../app/Core/Env.php';
+\app\Core\Env::load(__DIR__ . '/../.env');
 $cfg = require __DIR__ . '/../config/database.php';
 
 try {
