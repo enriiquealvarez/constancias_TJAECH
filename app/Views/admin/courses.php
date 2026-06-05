@@ -45,9 +45,14 @@
                         <input type="text" name="area" class="w-full h-11 px-4 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors placeholder-slate-300" placeholder="Ej. Instituto de Formación">
                     </div>
                     <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Tipo de Evento</label>
+                        <input type="text" name="event_type" required class="w-full h-11 px-4 rounded-lg border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors placeholder-slate-300" placeholder="Ej. Curso, Taller, Ponencia, Debate" value="Curso">
+                        <p class="text-[10px] text-slate-400 pl-1 mt-1 font-medium">Define la clasificación del evento. Se usará para ajustar automáticamente la redacción del correo electrónico (ej. <i>el curso</i> o <i>la ponencia</i>).</p>
+                    </div>
+                    <div class="space-y-2">
                         <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Texto Personalizado de Constancia (Opcional)</label>
                         <textarea name="cert_text_template" rows="3" class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:ring-primary focus:border-primary bg-slate-50/50 hover:bg-white transition-colors placeholder-slate-300" placeholder="Ej. Por su participación en el {curso}, con el objetivo de..."></textarea>
-                        <p class="text-[10px] text-slate-400 pl-1 mt-1 font-medium">Use `{curso}` como comodín para insertar dinámicamente el nombre del curso en el texto.</p>
+                        <p class="text-[10px] text-slate-400 pl-1 mt-1 font-medium">Use `{curso}` como comodín (se insertará automáticamente en <b>negrita</b>). Se permite HTML básico: <b>&lt;b&gt;negrita&lt;/b&gt;</b>, <i>&lt;i&gt;cursiva&lt;/i&gt;</i>, <u>&lt;u&gt;subrayado&lt;/u&gt;</u>, &lt;br&gt; salto de línea.</p>
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Plantilla de Constancia (JPG/PNG)</label>

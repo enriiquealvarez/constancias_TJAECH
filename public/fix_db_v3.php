@@ -20,6 +20,15 @@ try {
         $messages[] = "Columna 'cert_text_template' agregada con éxito a la tabla 'courses'.";
     }
 
+    // 1.5. Check/Add event_type to courses
+    $stmt = $pdo->query("SHOW COLUMNS FROM courses LIKE 'event_type'");
+    if ($stmt->fetch()) {
+        $messages[] = "La columna 'event_type' ya existe en la tabla 'courses'.";
+    } else {
+        $pdo->exec("ALTER TABLE courses ADD COLUMN event_type VARCHAR(100) NOT NULL DEFAULT 'Curso';");
+        $messages[] = "Columna 'event_type' agregada con éxito a la tabla 'courses'.";
+    }
+
     // 2. Check/Add email_received to certificates
     $stmt = $pdo->query("SHOW COLUMNS FROM certificates LIKE 'email_received'");
     if ($stmt->fetch()) {

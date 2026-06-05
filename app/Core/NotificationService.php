@@ -11,7 +11,7 @@ class NotificationService
     {
         $pdo = Database::connection();
         $stmt = $pdo->prepare("
-            SELECT c.*, p.full_name, p.email, crs.name AS course_name, crs.background_image, crs.speaker_background_image, crs.cert_date, crs.cert_text_template 
+            SELECT c.*, p.full_name, p.email, crs.name AS course_name, crs.background_image, crs.speaker_background_image, crs.cert_date, crs.cert_text_template, crs.event_type 
             FROM certificates c 
             JOIN participants p ON p.id = c.participant_id 
             JOIN courses crs ON crs.id = c.course_id 
@@ -31,6 +31,10 @@ class NotificationService
         
         $bg = strtolower($docType) === 'reconocimiento' ? ($cert['speaker_background_image'] ?? $cert['background_image']) : $cert['background_image'];
         $certDate = $cert['cert_date'] ?? null;
+
+        $eventType = trim($cert['event_type'] ?? 'Curso');
+        if (empty($eventType)) $eventType = 'Curso';
+        $art = in_array(strtolower($eventType), ['ponencia', 'plática', 'platica', 'conferencia', 'mesa redonda', 'conversación', 'conversacion', 'charla', 'sesión', 'sesion']) ? 'la' : 'el';
 
         $pdfPath = null;
         try {
@@ -57,7 +61,7 @@ class NotificationService
         </div>
         <div style='padding: 30px;'>
             <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'><strong>{$name}</strong>,</p>
-            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Nos complace informarle que ha acreditado satisfactoriamente el <strong>\"{$courseName}\"</strong>.</p>
+            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Nos complace informarle que ha acreditado satisfactoriamente {$art} <strong>{$eventType} \"{$courseName}\"</strong>.</p>
             <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Por este medio, se adjunta su constancia oficial en formato PDF.</p>
             <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Asimismo, podrá consultarla y verificar su autenticidad a través del siguiente enlace:</p>
             
@@ -90,7 +94,7 @@ class NotificationService
     </div>
 </div>";
         
-        $text = "{$name},\n\nNos complace informarle que ha acreditado satisfactoriamente el \"{$courseName}\".\n\nPor este medio, se adjunta su constancia oficial en formato PDF.\n\nAsimismo, podrá consultarla y verificar su autenticidad a través del siguiente enlace: {$link}\n\nPor favor, confirma la recepción en el siguiente enlace: {$confirmLink}\n\nTribunal de Justicia Administrativa del Estado de Chiapas";
+        $text = "{$name},\n\nNos complace informarle que ha acreditado satisfactoriamente {$art} {$eventType} \"{$courseName}\".\n\nPor este medio, se adjunta su constancia oficial en formato PDF.\n\nAsimismo, podrá consultarla y verificar su autenticidad a través del siguiente enlace: {$link}\n\nPor favor, confirma la recepción en el siguiente enlace: {$confirmLink}\n\nTribunal de Justicia Administrativa del Estado de Chiapas";
 
         try {
             $attachments = [];

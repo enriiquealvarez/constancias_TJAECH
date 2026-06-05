@@ -177,6 +177,7 @@
                 form.cert_date.value = row.cert_date || '';
                 form.modality.value = row.modality || '';
                 form.area.value = row.area || '';
+                form.event_type.value = row.event_type || 'Curso';
                 form.cert_text_template.value = row.cert_text_template || '';
 
                 // Populate Previews

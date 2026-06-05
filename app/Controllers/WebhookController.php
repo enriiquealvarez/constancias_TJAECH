@@ -112,11 +112,15 @@ class WebhookController extends Controller
         $link = base_url('/c/' . $token);
 
         $pdo = Database::connection();
-        $stmtCourseData = $pdo->prepare("SELECT background_image, speaker_background_image, cert_date, cert_text_template FROM courses WHERE id = ?");
+        $stmtCourseData = $pdo->prepare("SELECT background_image, speaker_background_image, cert_date, cert_text_template, event_type FROM courses WHERE id = ?");
         $stmtCourseData->execute([$courseId]);
         $courseData = $stmtCourseData->fetch(\PDO::FETCH_ASSOC);
         $bg = strtolower($docType) === 'reconocimiento' ? ($courseData['speaker_background_image'] ?? $courseData['background_image']) : $courseData['background_image'];
         $certDate = $courseData['cert_date'] ?? null;
+
+        $eventType = trim($courseData['event_type'] ?? 'Curso');
+        if (empty($eventType)) $eventType = 'Curso';
+        $art = in_array(strtolower($eventType), ['ponencia', 'plática', 'platica', 'conferencia', 'mesa redonda', 'conversación', 'conversacion', 'charla', 'sesión', 'sesion']) ? 'la' : 'el';
 
         $pdfPath = null;
         try {
@@ -143,7 +147,7 @@ class WebhookController extends Controller
         <div style='padding: 30px;'>
             <h2 style='margin-top: 0; color: #111827; font-size: 22px;'>¡Felicidades por tu logro!</h2>
             <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Hola <strong>{$name}</strong>,</p>
-            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Has concluido satisfactoriamente tu evaluación para el programa de capacitación <strong>\"{$courseName}\"</strong>.</p>
+            <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Has concluido satisfactoriamente tu evaluación para {$art} <strong>{$eventType} \"{$courseName}\"</strong>.</p>
             <p style='font-size: 15px; line-height: 1.6; color: #4b5563;'>Adjuntamos a este correo tu <strong>" . strtolower($docType) . " oficial</strong> en formato PDF. También puedes consultarla y verificar su autenticidad ingresando al siguiente enlace:</p>
             
             <div style='margin: 30px 0; text-align: center;'>
@@ -169,7 +173,7 @@ class WebhookController extends Controller
     </div>
 </div>";
         
-        $text = "Felicidades {$name}\n\nHas concluido satisfactoriamente tu evaluacion para {$courseName}.\n\nPuedes ver tu documento oficial aqui: {$link}\n\nTribunal de Justicia Administrativa del Estado de Chiapas";
+        $text = "Felicidades {$name}\n\nHas concluido satisfactoriamente tu evaluación para {$art} {$eventType} \"{$courseName}\".\n\nPuedes ver tu documento oficial aqui: {$link}\n\nTribunal de Justicia Administrativa del Estado de Chiapas";
 
         try {
             $attachments = [];
