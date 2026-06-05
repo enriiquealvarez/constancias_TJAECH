@@ -210,7 +210,7 @@ class ApiController extends Controller
             }
             
             $pdo = Database::connection();
-            $stmt = $pdo->prepare("SELECT background_image, speaker_background_image, cert_date FROM courses WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT background_image, speaker_background_image, cert_date, cert_text_template FROM courses WHERE id = ?");
             $stmt->execute([$record['course_id']]);
             $courseData = $stmt->fetch(\PDO::FETCH_ASSOC);
             
@@ -225,7 +225,8 @@ class ApiController extends Controller
                     'token' => $token,
                     'url' => $link,
                     'background' => $bg ?: null,
-                    'cert_date' => $certDate
+                    'cert_date' => $certDate,
+                    'cert_text_template' => $courseData['cert_text_template'] ?? null
                 ]);
                 
                 if (file_exists($pdfPath)) {

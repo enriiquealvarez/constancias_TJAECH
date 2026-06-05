@@ -112,7 +112,7 @@ class WebhookController extends Controller
         $link = base_url('/c/' . $token);
 
         $pdo = Database::connection();
-        $stmtCourseData = $pdo->prepare("SELECT background_image, speaker_background_image, cert_date FROM courses WHERE id = ?");
+        $stmtCourseData = $pdo->prepare("SELECT background_image, speaker_background_image, cert_date, cert_text_template FROM courses WHERE id = ?");
         $stmtCourseData->execute([$courseId]);
         $courseData = $stmtCourseData->fetch(\PDO::FETCH_ASSOC);
         $bg = strtolower($docType) === 'reconocimiento' ? ($courseData['speaker_background_image'] ?? $courseData['background_image']) : $courseData['background_image'];
@@ -126,7 +126,8 @@ class WebhookController extends Controller
                 'token' => $token,
                 'url' => $link,
                 'background' => $bg ?: null,
-                'cert_date' => $certDate
+                'cert_date' => $certDate,
+                'cert_text_template' => $courseData['cert_text_template'] ?? null
             ]);
         } catch (\Throwable $e) {
             error_log('Error generating PDF: ' . $e->getMessage());

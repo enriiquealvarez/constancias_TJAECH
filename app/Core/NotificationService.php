@@ -11,7 +11,7 @@ class NotificationService
     {
         $pdo = Database::connection();
         $stmt = $pdo->prepare("
-            SELECT c.*, p.full_name, p.email, crs.name AS course_name, crs.background_image, crs.speaker_background_image, crs.cert_date 
+            SELECT c.*, p.full_name, p.email, crs.name AS course_name, crs.background_image, crs.speaker_background_image, crs.cert_date, crs.cert_text_template 
             FROM certificates c 
             JOIN participants p ON p.id = c.participant_id 
             JOIN courses crs ON crs.id = c.course_id 
@@ -40,7 +40,8 @@ class NotificationService
                 'token' => $token,
                 'url' => $link,
                 'background' => $bg ?: null,
-                'cert_date' => $certDate
+                'cert_date' => $certDate,
+                'cert_text_template' => $cert['cert_text_template'] ?? null
             ]);
         } catch (\Throwable $e) {
             error_log('Error generating PDF in NotificationService: ' . $e->getMessage());
