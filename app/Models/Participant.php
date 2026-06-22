@@ -49,7 +49,6 @@ class Participant
                 if ($f === 'email' && $value === '') {
                     $value = null;
                 }
-                error_log("UPDATE FIELD $f = '$value' (isset=" . (isset($data[$f]) ? '1' : '0') . ")");
                 $params[] = $value;
             }
         }
@@ -58,15 +57,8 @@ class Participant
         
         $params[] = $id;
         $sql = "UPDATE participants SET " . implode(', ', $fields) . " WHERE id = ?";
-        error_log("UPDATE SQL: $sql with params: " . json_encode($params));
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
-        
-        // Verify what was saved
-        $verify = $pdo->prepare('SELECT full_name, email, type FROM participants WHERE id = ?');
-        $verify->execute([$id]);
-        $saved = $verify->fetch(\PDO::FETCH_ASSOC);
-        error_log("AFTER UPDATE DB HAS: " . json_encode($saved));
     }
 
     public static function delete($id)

@@ -2,16 +2,50 @@
 header('Content-Type: text/plain; charset=utf-8');
 
 try {
-    $env = parse_ini_file(__DIR__ . '/../.env');
+    // Try multiple locations for .env
+    $envPaths = [
+        __DIR__ . '/../.env',
+        __DIR__ . '/../../.env',
+        __DIR__ . '/.env',
+    ];
     
-    if (!$env || !isset($env['DB_HOST'])) {
-        die("Error: No se pudo leer el archivo .env\n");
+    $envFile = null;
+    foreach ($envPaths as $path) {
+        if (file_exists($path)) {
+            $envFile = $path;
+            break;
+        }
+    }
+    
+    if (!$envFile) {
+        // Try to use hardcoded values or read from config
+        echo "Archivo .env no encontrado. Intentando usar configuración del sistema...\n\n";
+        
+        // Try to use database config from file
+        if (file_exists(__DIR__ . '/../config/database.php')) {
+            $dbConfig = require __DIR__ . '/../config/database.php';
+            $host = $dbConfig['host'] ?? 'localhost';
+            $database = $dbConfig['database'] ?? '';
+            $username = $dbConfig['username'] ?? 'root';
+            $password = $dbConfig['password'] ?? '';
+        } else {
+            die("Error: No se encontró .env ni database.php\n");
+        }
+    } else {
+        $env = parse_ini_file($envFile);
+        if (!$env || !isset($env['DB_HOST'])) {
+            die("Error: Archivo .env no tiene configuración válida\n");
+        }
+        $host = $env['DB_HOST'];
+        $database = $env['DB_DATABASE'];
+        $username = $env['DB_USERNAME'];
+        $password = $env['DB_PASSWORD'];
     }
 
     $pdo = new PDO(
-        'mysql:host=' . $env['DB_HOST'] . ';dbname=' . $env['DB_DATABASE'] . ';charset=utf8mb4',
-        $env['DB_USERNAME'],
-        $env['DB_PASSWORD'],
+        'mysql:host=' . $host . ';dbname=' . $database . ';charset=utf8mb4',
+        $username,
+        $password,
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 
