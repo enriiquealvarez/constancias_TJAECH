@@ -22,9 +22,14 @@ class Participant
     {
         $pdo = Database::connection();
         $stmt = $pdo->prepare('INSERT INTO participants (full_name, email, type) VALUES (?, ?, ?)');
+        $email = trim($data['email'] ?? '');
+        // Convert empty email to NULL to avoid trigger issues
+        if ($email === '') {
+            $email = null;
+        }
         $stmt->execute([
             trim($data['full_name'] ?? ''),
-            trim($data['email'] ?? ''),
+            $email,
             $data['type'] ?? 'INTERNAL',
         ]);
         return (int)$pdo->lastInsertId();
@@ -40,7 +45,10 @@ class Participant
             if (isset($data[$f])) {
                 $fields[] = "$f = ?";
                 $value = trim($data[$f] ?? '');
-                // DEBUG: Log each field
+                // Convert empty email to NULL to avoid trigger issues
+                if ($f === 'email' && $value === '') {
+                    $value = null;
+                }
                 error_log("UPDATE FIELD $f = '$value' (isset=" . (isset($data[$f]) ? '1' : '0') . ")");
                 $params[] = $value;
             }
