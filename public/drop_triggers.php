@@ -2,53 +2,42 @@
 header('Content-Type: text/plain; charset=utf-8');
 
 try {
-    // Try multiple locations for .env
-    $envPaths = [
-        __DIR__ . '/../.env',
-        __DIR__ . '/../../.env',
-        __DIR__ . '/.env',
-    ];
+    $envFile = __DIR__ . '/../.env';
     
-    $host = $database = $username = $password = null;
-    
-    foreach ($envPaths as $path) {
-        if (file_exists($path)) {
-            echo "Encontrado archivo .env en: $path\n";
-            $env = parse_ini_file($path);
-            
-            if ($env) {
-                $host = $env['DB_HOST'] ?? null;
-                $database = $env['DB_DATABASE'] ?? null;
-                $username = $env['DB_USERNAME'] ?? null;
-                $password = $env['DB_PASSWORD'] ?? null;
-                
-                if ($host && $database && $username !== null) {
-                    echo "✓ Configuración válida encontrada\n\n";
-                    break;
-                }
-            }
-        }
+    if (!file_exists($envFile)) {
+        die("Error: .env no encontrado en $envFile\n");
     }
     
-    // If not found in .env, try config/database.php
-    if (!$host && file_exists(__DIR__ . '/../config/database.php')) {
-        echo "Intentando usar config/database.php\n";
-        $dbConfig = require __DIR__ . '/../config/database.php';
-        $host = $dbConfig['host'] ?? null;
-        $database = $dbConfig['database'] ?? null;
-        $username = $dbConfig['username'] ?? null;
-        $password = $dbConfig['password'] ?? null;
-        
-        if ($host && $database && $username !== null) {
-            echo "✓ Configuración válida encontrada en config/database.php\n\n";
+    echo "Leyendo .env desde: $envFile\n\n";
+    
+    // Read .env file line by line
+    $env = [];
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos($line, '=') === false || $line[0] === '#') {
+            continue;
         }
+        list($key, $value) = explode('=', $line, 2);
+        $key = trim($key);
+        $value = trim($value);
+        // Remove quotes if present
+        $value = trim($value, '"\'');
+        $env[$key] = $value;
     }
+    
+    $host = $env['DB_HOST'] ?? '127.0.0.1';
+    $database = $env['DB_DATABASE'] ?? 'tjaechgob_constancias_tja';
+    $username = $env['DB_USERNAME'] ?? 'root';
+    $password = $env['DB_PASSWORD'] ?? '';
     
     if (!$host || !$database) {
-        die("Error: No se encontró configuración de base de datos válida\n");
+        die("Error: DB_HOST o DB_DATABASE no configurados en .env\n");
     }
-
-    echo "Conectando a: $host / $database\n\n";
+    
+    echo "Host: $host\n";
+    echo "Database: $database\n";
+    echo "Username: $username\n";
+    echo "Password: " . (strlen($password) > 0 ? "***" : "(vacío)") . "\n\n";
     
     $pdo = new PDO(
         'mysql:host=' . $host . ';dbname=' . $database . ';charset=utf8mb4',
