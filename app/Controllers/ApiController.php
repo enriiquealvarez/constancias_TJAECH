@@ -103,6 +103,8 @@ class ApiController extends Controller
                 $payload = $this->jsonPayload();
                 $this->csrfGuard($payload);
                 $this->validateParticipant($payload);
+                // DEBUG: Log del payload recibido
+                error_log('UPDATE PARTICIPANT ' . $id . ': ' . json_encode($payload));
                 Participant::update($id, $payload);
                 AuditLog::add($_SESSION['user']['id'], 'UPDATE', 'participants', $id);
                 $this->json(['ok' => true]);
