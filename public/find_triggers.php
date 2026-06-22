@@ -1,15 +1,20 @@
 <?php
-// Script to find and display triggers on participants table
-$env = parse_ini_file(__DIR__ . '/../.env');
-
-$pdo = new PDO(
-    'mysql:host=' . $env['DB_HOST'] . ';dbname=' . $env['DB_DATABASE'],
-    $env['DB_USERNAME'],
-    $env['DB_PASSWORD'],
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-);
+header('Content-Type: text/plain; charset=utf-8');
 
 try {
+    $env = parse_ini_file(__DIR__ . '/../.env');
+    
+    if (!$env || !isset($env['DB_HOST'])) {
+        die("Error: No se pudo leer el archivo .env\n");
+    }
+
+    $pdo = new PDO(
+        'mysql:host=' . $env['DB_HOST'] . ';dbname=' . $env['DB_DATABASE'] . ';charset=utf8mb4',
+        $env['DB_USERNAME'],
+        $env['DB_PASSWORD'],
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
+
     // Find all triggers on participants table
     $stmt = $pdo->query("SELECT TRIGGER_SCHEMA, TRIGGER_NAME, EVENT_MANIPULATION, EVENT_OBJECT_TABLE, ACTION_STATEMENT FROM INFORMATION_SCHEMA.TRIGGERS WHERE EVENT_OBJECT_TABLE = 'participants'");
     $triggers = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -51,5 +56,6 @@ try {
     }
     
 } catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
+    echo "Error: " . $e->getMessage() . "\n";
+    echo "Trace: " . $e->getTraceAsString();
 }
