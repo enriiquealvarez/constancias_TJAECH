@@ -24,6 +24,8 @@ class CertificateGenerator
             $bgPath = __DIR__ . '/../../public/assets/certificates/' . $bgInput;
             if (file_exists($bgPath)) {
                 $pdf->Image($bgPath, 0, 0, 279.4, 215.9, '', '', '', false, 300, '', false, false, 0);
+            } else {
+                error_log('CertificateGenerator: background_image no encontrada en disco: ' . $bgPath);
             }
         }
 

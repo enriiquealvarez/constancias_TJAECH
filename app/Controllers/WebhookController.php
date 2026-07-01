@@ -60,14 +60,15 @@ class WebhookController extends Controller
             }
 
             // Find or create course
-            $stmtCourse = $pdo->prepare("SELECT id FROM courses WHERE name = ? LIMIT 1");
+            // Use case-insensitive match and prefer courses that already have a background template
+            $stmtCourse = $pdo->prepare("SELECT id FROM courses WHERE LOWER(name) = LOWER(?) ORDER BY (background_image IS NOT NULL AND background_image != '') DESC, id ASC LIMIT 1");
             $stmtCourse->execute([$courseName]);
             $courseId = $stmtCourse->fetchColumn();
             if (!$courseId) {
                 $courseId = Course::create([
                     'name' => $courseName,
                     'edition' => date('Y'),
-                    'modality' => 'En lnea',
+                    'modality' => 'En línea',
                     'area' => 'General'
                 ]);
             }

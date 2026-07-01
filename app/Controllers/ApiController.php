@@ -57,6 +57,16 @@ class ApiController extends Controller
             if ($method === 'PUT') {
                 $payload = $this->jsonPayload();
                 $this->csrfGuard($payload);
+                // Si el nombre viene vacío (select sin opción activa), preservar el nombre existente en BD
+                if (empty(trim($payload['name'] ?? ''))) {
+                    $pdo = Database::connection();
+                    $existing = $pdo->prepare('SELECT name FROM courses WHERE id = ? LIMIT 1');
+                    $existing->execute([$id]);
+                    $existingName = $existing->fetchColumn();
+                    if ($existingName) {
+                        $payload['name'] = $existingName;
+                    }
+                }
                 $this->validateCourse($payload);
                 $bg = $this->processBackgroundImage($payload, 'background_image');
                 if ($bg) $payload['background_image'] = $bg;
