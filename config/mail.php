@@ -14,14 +14,15 @@ $boolEnv = static function ($key, $default = false) {
 };
 
 return [
-    'mode' => 'smtp',
-    'host' => 'mail.tjaech.gob.mx',
-    'port' => 465,
-    'encryption' => 'ssl',
-    'username' => 'informatica@tjaech.gob.mx',
-    'password' => 'UKvYMPp%wumX',
-    'from_email' => 'informatica@tjaech.gob.mx',
-    'from_name' => 'TJAECH Constancias Oficiales',
+    'mode' => $env('MAIL_MODE', 'smtp'),
+    'host' => $env('MAIL_HOST', 'mail.tjaech.gob.mx'),
+    'port' => (int)$env('MAIL_PORT', 465),
+    'encryption' => $env('MAIL_ENCRYPTION', 'ssl'),
+    // Las credenciales viven en .env (no en el repositorio).
+    'username' => $env('MAIL_USERNAME', 'ija@tjaech.gob.mx'),
+    'password' => $env('MAIL_PASSWORD', ''),
+    'from_email' => $env('MAIL_FROM_EMAIL', 'ija@tjaech.gob.mx'),
+    'from_name' => $env('MAIL_FROM_NAME', 'TJAECH Constancias Oficiales'),
     'app_url' => 'http://localhost/constanciasTJAECH',
     'log_path' => __DIR__ . '/../storage/mail.log',
     'log_errors' => true,
