@@ -74,7 +74,8 @@ class CertificateGenerator
             $htmlText = 'Por su participación en el <b>"' . htmlspecialchars($displayText, ENT_QUOTES, 'UTF-8') . '"</b>, con el objetivo de fortalecer las capacidades institucionales y promover el ejercicio responsable, ético y transparente del servicio público.';
         }
 
-        $pdf->writeHTMLCell(219.4, 8, 30, 134, $htmlText, 0, 1, false, true, 'C', true);
+        // Párrafo justificado (la última línea queda alineada a la izquierda).
+        $pdf->writeHTMLCell(219.4, 8, 30, 134, $htmlText, 0, 1, false, true, 'J', true);
 
         // Date
         $pdf->SetFont('helvetica', '', 11);
