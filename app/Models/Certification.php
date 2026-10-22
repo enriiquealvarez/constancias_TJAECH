@@ -9,7 +9,7 @@ use app\Core\Database;
  */
 class Certification
 {
-    const AREA_NAME = 'Órgano Instructor en Mecanismos Alternativos de Solución de Controversias en Materia de Justicia Administrativa';
+    const AREA_NAME = 'Órgano Instructor en Mecanismos Alternativos de Solución de Controversias en Materia Administrativa del Tribunal de Justicia Administrativa del Estado de Chiapas';
     const DEFAULT_SUBJECT = 'Persona Facilitadora en Materia Administrativa';
     const TIMEZONE = 'America/Mexico_City';
     const EXPIRING_DAYS = 30;
