@@ -32,6 +32,11 @@ class App
             return;
         }
 
+        if (preg_match('#^/certificacion/([A-Za-z0-9_-]+)$#', $uri, $m)) {
+            (new \app\Controllers\PublicController())->certification($m[1]);
+            return;
+        }
+
         if ($uri === '/c' && !empty($_GET['token'])) {
             (new \app\Controllers\PublicController())->show($_GET['token']);
             return;
@@ -84,6 +89,11 @@ class App
 
         if ($uri === '/admin/certificates') {
             (new \app\Controllers\AdminController())->certificates();
+            return;
+        }
+
+        if ($uri === '/admin/certificaciones') {
+            (new \app\Controllers\AdminController())->certifications();
             return;
         }
 

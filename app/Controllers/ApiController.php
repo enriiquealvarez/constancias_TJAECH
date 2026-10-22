@@ -8,6 +8,8 @@ use app\Core\Database;
 use app\Models\Course;
 use app\Models\Participant;
 use app\Models\Certificate;
+use app\Models\Certification;
+use app\Core\QrCode;
 use app\Models\AuditLog;
 use app\Models\User;
 use app\Core\NotificationService;
@@ -23,6 +25,9 @@ class ApiController extends Controller
         $path = '/' . ltrim($path, '/');
 
         if ($method === 'GET' && $path === '/metrics') {
+            if (!Auth::can('manage_certificates') && !Auth::can('view_certificates')) {
+                $this->json(['ok' => false, 'message' => 'No autorizado.'], 403);
+            }
             $this->json(Certificate::metrics());
         }
 
@@ -256,6 +261,95 @@ class ApiController extends Controller
             return;
         }
 
+        if ($path === '/certifications') {
+            if ($method === 'GET') {
+                if (!Auth::can('manage_certifications') && !Auth::can('view_certifications')) {
+                    $this->json(['ok' => false, 'message' => 'No autorizado.'], 403);
+                }
+                $q = trim($_GET['q'] ?? '');
+                $this->json([
+                    'ok' => true,
+                    'data' => Certification::all($q),
+                    'metrics' => Certification::metrics(),
+                    'next_number' => Certification::nextNumber(),
+                ]);
+            }
+            if ($method === 'POST') {
+                $this->requireCapability('manage_certifications');
+                $payload = $this->jsonPayload();
+                $this->csrfGuard($payload);
+                $this->validateCertification($payload);
+                try {
+                    $id = Certification::create($payload, $_SESSION['user']['id']);
+                } catch (\PDOException $e) {
+                    $this->duplicateCertificationNumber($e);
+                }
+                AuditLog::add($_SESSION['user']['id'], 'CREATE', 'certifications', $id);
+                $this->json(['ok' => true, 'id' => $id]);
+            }
+        }
+
+        if (preg_match('#^/certifications/(\d+)$#', $path, $m)) {
+            $this->requireCapability('manage_certifications');
+            $id = (int)$m[1];
+            if (!Certification::find($id)) {
+                $this->json(['ok' => false, 'message' => 'Certificación no encontrada.'], 404);
+            }
+            $payload = $this->jsonPayload();
+            $this->csrfGuard($payload);
+            if ($method === 'PUT') {
+                $this->validateCertification($payload);
+                try {
+                    Certification::update($id, $payload);
+                } catch (\PDOException $e) {
+                    $this->duplicateCertificationNumber($e);
+                }
+                AuditLog::add($_SESSION['user']['id'], 'UPDATE', 'certifications', $id);
+                $this->json(['ok' => true]);
+            }
+            if ($method === 'DELETE') {
+                Certification::delete($id);
+                AuditLog::add($_SESSION['user']['id'], 'DELETE', 'certifications', $id);
+                $this->json(['ok' => true]);
+            }
+        }
+
+        if (preg_match('#^/certifications/status/(\d+)$#', $path, $m) && $method === 'POST') {
+            $this->requireCapability('manage_certifications');
+            $payload = $this->jsonPayload();
+            $this->csrfGuard($payload);
+            $status = $payload['status'] ?? '';
+            if (!in_array($status, ['ACTIVE', 'REVOKED'], true)) {
+                $this->json(['ok' => false, 'message' => 'Estatus invalido.'], 422);
+            }
+            Certification::setStatus((int)$m[1], $status);
+            AuditLog::add($_SESSION['user']['id'], $status === 'REVOKED' ? 'REVOKE' : 'REACTIVATE', 'certifications', (int)$m[1]);
+            $this->json(['ok' => true]);
+        }
+
+        if (preg_match('#^/certifications/qr/(\d+)\.(svg|png)$#', $path, $m) && $method === 'GET') {
+            if (!Auth::can('manage_certifications') && !Auth::can('view_certifications')) {
+                $this->json(['ok' => false, 'message' => 'No autorizado.'], 403);
+            }
+            $record = Certification::find((int)$m[1]);
+            if (!$record) {
+                $this->json(['ok' => false, 'message' => 'Certificación no encontrada.'], 404);
+            }
+            $url = base_url('certificacion/' . $record['token']);
+            $filename = 'QR_certificacion_' . preg_replace('/[^A-Za-z0-9_-]+/', '', $record['cert_number']) . '.' . $m[2];
+            try {
+                $body = $m[2] === 'svg' ? QrCode::svg($url) : QrCode::png($url);
+            } catch (\Throwable $e) {
+                error_log('Error generating certification QR: ' . $e->getMessage());
+                $this->json(['ok' => false, 'message' => 'No se pudo generar el QR.'], 500);
+            }
+            header('Content-Type: ' . ($m[2] === 'svg' ? 'image/svg+xml' : 'image/png'));
+            header('Content-Disposition: ' . (!empty($_GET['download']) ? 'attachment' : 'inline') . '; filename="' . $filename . '"');
+            header('Cache-Control: private, max-age=3600');
+            echo $body;
+            exit;
+        }
+
         if ($path === '/audit' && $method === 'GET') {
             $this->requireCapability('view_audit');
             $q = trim($_GET['q'] ?? '');
@@ -426,6 +520,35 @@ class ApiController extends Controller
         }
     }
 
+    private function validateCertification($payload)
+    {
+        $number = trim($payload['cert_number'] ?? '');
+        $name = trim($payload['full_name'] ?? '');
+        $subject = trim($payload['subject'] ?? '');
+        if ($number === '' || $name === '' || $subject === '') {
+            $this->json(['ok' => false, 'message' => 'Nombre, número de certificación y materia son obligatorios.'], 422);
+        }
+        if (mb_strlen($number) > 30 || mb_strlen($name) > 200 || mb_strlen($subject) > 200) {
+            $this->json(['ok' => false, 'message' => 'Alguno de los campos excede la longitud permitida.'], 422);
+        }
+        $from = \DateTime::createFromFormat('!Y-m-d', $payload['valid_from'] ?? '');
+        $until = \DateTime::createFromFormat('!Y-m-d', $payload['valid_until'] ?? '');
+        if (!$from || !$until || $from->format('Y-m-d') !== $payload['valid_from'] || $until->format('Y-m-d') !== $payload['valid_until']) {
+            $this->json(['ok' => false, 'message' => 'Las fechas de vigencia no son válidas.'], 422);
+        }
+        if ($until < $from) {
+            $this->json(['ok' => false, 'message' => 'La fecha de fin de vigencia no puede ser anterior a la de inicio.'], 422);
+        }
+    }
+
+    private function duplicateCertificationNumber(\PDOException $e)
+    {
+        if ($e->getCode() === '23000') {
+            $this->json(['ok' => false, 'message' => 'Ya existe una certificación con ese número.'], 422);
+        }
+        throw $e;
+    }
+
     private function validateUser($payload, $isCreate)
     {
         if (empty(trim($payload['name'] ?? ''))) {
@@ -437,7 +560,7 @@ class ApiController extends Controller
         if ($isCreate && empty($payload['password'])) {
             $this->json(['ok' => false, 'message' => 'La contrasena es obligatoria.'], 422);
         }
-        $allowed = ['ADMIN', 'COURSES', 'PARTICIPANTS', 'CERTIFICATES', 'READONLY'];
+        $allowed = ['ADMIN', 'COURSES', 'PARTICIPANTS', 'CERTIFICATES', 'READONLY', 'CEMASC'];
         if (empty($payload['roles']) || !is_array($payload['roles'])) {
             $this->json(['ok' => false, 'message' => 'Selecciona al menos un rol.'], 422);
         }

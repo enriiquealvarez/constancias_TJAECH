@@ -28,6 +28,7 @@
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="roles[]" value="PARTICIPANTS" class="rounded text-corporate-blue"><span class="text-xs text-slate-600">Participantes</span></label>
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="roles[]" value="CERTIFICATES" class="rounded text-corporate-blue"><span class="text-xs text-slate-600">Constancias</span></label>
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="roles[]" value="READONLY" class="rounded text-corporate-blue"><span class="text-xs text-slate-600">Solo lectura</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="roles[]" value="CEMASC" class="rounded text-corporate-blue"><span class="text-xs text-slate-600">CEMASC (Certificaciones)</span></label>
                     </div>
                 </div>
                 <div class="space-y-1.5">
@@ -84,6 +85,7 @@
                         <tr><td class="py-2 font-bold text-xs">PARTICIPANTS</td><td class="py-2 text-xs">Gestión de participantes</td></tr>
                         <tr><td class="py-2 font-bold text-xs">CERTIFICATES</td><td class="py-2 text-xs">Gestión de constancias</td></tr>
                         <tr><td class="py-2 font-bold text-xs">READONLY</td><td class="py-2 text-xs">Solo lectura (sin edición)</td></tr>
+                        <tr><td class="py-2 font-bold text-xs">CEMASC</td><td class="py-2 text-xs">Solo Certificaciones y sus QR (no ve cursos, participantes ni constancias)</td></tr>
                     </tbody>
                 </table>
             </div>

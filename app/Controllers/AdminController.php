@@ -10,6 +10,11 @@ class AdminController extends Controller
     public function dashboard()
     {
         Auth::requireAuth();
+        // Usuarios del CEMASC no ven el tablero de constancias: van directo a su módulo.
+        if (!Auth::can('view_certificates') && !Auth::can('manage_certificates') && Auth::can('view_certifications')) {
+            header('Location: ' . base_url('admin/certificaciones'));
+            exit;
+        }
         $this->render('admin/dashboard', [
             'title' => 'Dashboard',
             'csrf' => Csrf::token(),
@@ -69,6 +74,20 @@ class AdminController extends Controller
             'title' => 'Constancias',
             'csrf' => Csrf::token(),
             'can_manage' => Auth::can('manage_certificates'),
+        ], 'admin');
+    }
+
+    public function certifications()
+    {
+        Auth::requireAuth();
+        if (!Auth::can('manage_certifications') && !Auth::can('view_certifications')) {
+            $this->render('admin/forbidden', ['title' => 'Acceso restringido'], 'admin');
+            return;
+        }
+        $this->render('admin/certifications', [
+            'title' => 'Certificaciones',
+            'csrf' => Csrf::token(),
+            'can_manage' => Auth::can('manage_certifications'),
         ], 'admin');
     }
 

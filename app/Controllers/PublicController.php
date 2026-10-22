@@ -3,6 +3,7 @@ namespace app\Controllers;
 
 use app\Core\Controller;
 use app\Models\Certificate;
+use app\Models\Certification;
 
 class PublicController extends Controller
 {
@@ -24,6 +25,11 @@ class PublicController extends Controller
     {
         $record = Certificate::findByToken($token);
         if (!$record) {
+            // El formulario de verificación también acepta tokens de certificaciones.
+            if (Certification::findByToken($token)) {
+                header('Location: ' . base_url('certificacion/' . $token));
+                exit;
+            }
             $this->render('public/not_found', [
                 'title' => 'Constancia no encontrada',
                 'token' => $token,
@@ -33,6 +39,25 @@ class PublicController extends Controller
         $this->render('public/certificate', [
             'title' => 'Constancia verificada',
             'record' => $record,
+        ], 'public');
+    }
+
+    public function certification($token)
+    {
+        $record = Certification::findByToken($token);
+        if (!$record) {
+            http_response_code(404);
+            $this->render('public/not_found', [
+                'title' => 'Certificación no encontrada',
+                'token' => $token,
+            ], 'public');
+            return;
+        }
+        header('Cache-Control: no-store');
+        $this->render('public/certification', [
+            'title' => 'Verificación de certificación',
+            'record' => $record,
+            'state' => Certification::state($record),
         ], 'public');
     }
 

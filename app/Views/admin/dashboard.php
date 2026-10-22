@@ -61,6 +61,12 @@
                     <span class="text-xs font-bold text-slate-600 group-hover:text-primary transition-colors uppercase tracking-wider">Constancias</span>
                 </a>
                 <?php endif; ?>
+                <?php if (\app\Core\Auth::can('manage_certifications') || \app\Core\Auth::can('view_certifications')): ?>
+                <a href="<?php echo base_url('admin/certificaciones'); ?>" class="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border-2 border-slate-100 hover:border-corporate-blue hover:shadow-md transition-all group bg-slate-50/50 hover:bg-white text-center">
+                    <span class="material-symbols-outlined text-2xl text-slate-400 group-hover:text-corporate-blue transition-colors">verified</span>
+                    <span class="text-xs font-bold text-slate-600 group-hover:text-primary transition-colors uppercase tracking-wider">Certificaciones</span>
+                </a>
+                <?php endif; ?>
                 <?php if (\app\Core\Auth::can('view_audit')): ?>
                 <a href="<?php echo base_url('admin/audit'); ?>" class="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border-2 border-slate-100 hover:border-corporate-blue hover:shadow-md transition-all group bg-slate-50/50 hover:bg-white text-center">
                     <span class="material-symbols-outlined text-2xl text-slate-400 group-hover:text-corporate-blue transition-colors">policy</span>

@@ -9,6 +9,8 @@ class Auth
         'PARTICIPANTS' => ['manage_participants', 'view_participants'],
         'CERTIFICATES' => ['manage_certificates', 'view_certificates'],
         'READONLY' => ['view_courses', 'view_participants', 'view_certificates'],
+        // CEMASC/OIMASC: solo su módulo de Certificaciones, sin acceso a lo del Instituto.
+        'CEMASC' => ['manage_certifications', 'view_certifications'],
     ];
 
     public static function check()

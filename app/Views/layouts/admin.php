@@ -90,6 +90,13 @@
                 </a>
                 <?php endif; ?>
 
+                <?php if (\app\Core\Auth::can('manage_certifications') || \app\Core\Auth::can('view_certifications')): ?>
+                <a href="<?php echo base_url('admin/certificaciones'); ?>" class="flex items-center gap-4 px-6 py-3 <?php echo ($current === 'Certificaciones') ? 'text-accent sidebar-active bg-white/5' : 'text-slate-300 hover:bg-white/5'; ?> transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">verified</span>
+                    <span class="text-sm <?php echo ($current === 'Certificaciones') ? 'font-bold' : 'font-medium'; ?>">Certificaciones</span>
+                </a>
+                <?php endif; ?>
+
                 <?php if (\app\Core\Auth::can('view_audit')): ?>
                 <a href="<?php echo base_url('admin/audit'); ?>" class="flex items-center gap-4 px-6 py-3 <?php echo ($current === 'Auditoria') ? 'text-accent sidebar-active bg-white/5' : 'text-slate-300 hover:bg-white/5'; ?> transition-colors">
                     <span class="material-symbols-outlined text-[20px]">policy</span>
@@ -126,7 +133,7 @@
                         <span class="material-symbols-outlined text-[28px]">menu</span>
                     </button>
                     <h1 class="text-base lg:text-lg font-bold text-primary truncate"><?php echo htmlspecialchars($title ?? 'Admin'); ?></h1>
-                    <span class="hidden sm:inline-block text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded border border-slate-200">TJAECH</span>
+                    <span class="hidden sm:inline-block text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded border border-slate-200"><?php echo (\app\Core\Auth::can('view_certifications') && !\app\Core\Auth::can('view_certificates')) ? 'CEMASC' : 'TJAECH'; ?></span>
                 </div>
                 <div class="flex items-center gap-3 lg:gap-6">
                     <a href="<?php echo base_url('/'); ?>" target="_blank" class="flex items-center gap-2 text-slate-500 hover:text-primary cursor-pointer transition-colors" title="Ver portal público">
@@ -152,18 +159,30 @@
                 <span class="material-symbols-outlined text-[20px]">dashboard</span>
                 <span class="text-[9px] font-bold uppercase">Inicio</span>
             </a>
+            <?php if (\app\Core\Auth::can('manage_courses') || \app\Core\Auth::can('view_courses')): ?>
             <a href="<?php echo base_url('admin/courses'); ?>" class="flex flex-col items-center gap-1 <?php echo ($current === 'Cursos') ? 'text-accent' : 'text-slate-400'; ?>">
                 <span class="material-symbols-outlined text-[20px]">menu_book</span>
                 <span class="text-[9px] font-bold uppercase">Cursos</span>
             </a>
+            <?php endif; ?>
+            <?php if (\app\Core\Auth::can('manage_certificates') || \app\Core\Auth::can('view_certificates')): ?>
             <a href="<?php echo base_url('admin/certificates'); ?>" class="flex flex-col items-center gap-1 <?php echo ($current === 'Constancias') ? 'text-accent' : 'text-slate-400'; ?>">
                 <span class="material-symbols-outlined text-[24px]">workspace_premium</span>
                 <span class="text-[9px] font-bold uppercase">Const.</span>
             </a>
+            <?php endif; ?>
+            <?php if (\app\Core\Auth::can('manage_certifications') || \app\Core\Auth::can('view_certifications')): ?>
+            <a href="<?php echo base_url('admin/certificaciones'); ?>" class="flex flex-col items-center gap-1 <?php echo ($current === 'Certificaciones') ? 'text-accent' : 'text-slate-400'; ?>">
+                <span class="material-symbols-outlined text-[22px]">verified</span>
+                <span class="text-[9px] font-bold uppercase">Certif.</span>
+            </a>
+            <?php endif; ?>
+            <?php if (\app\Core\Auth::can('manage_participants') || \app\Core\Auth::can('view_participants')): ?>
             <a href="<?php echo base_url('admin/participants'); ?>" class="flex flex-col items-center gap-1 <?php echo ($current === 'Participantes') ? 'text-accent' : 'text-slate-400'; ?>">
                 <span class="material-symbols-outlined text-[20px]">group</span>
                 <span class="text-[9px] font-bold uppercase">Personas</span>
             </a>
+            <?php endif; ?>
             <button class="flex flex-col items-center gap-1 text-slate-400" onclick="toggleSidebar()">
                 <span class="material-symbols-outlined text-[20px]">menu</span>
                 <span class="text-[9px] font-bold uppercase">Menú</span>
